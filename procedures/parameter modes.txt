@@ -1,0 +1,10 @@
+DELIMITER //
+CREATE PROCEDURE my_sqrt(IN ival INT, OUT oval FLOAT, INOUT by_ten INT)
+BEGIN SET oval = SQRT(ival);
+SET by_ten = by_ten * (ival * 10);
+END//
+
+
+SET @var1 = 11;
+
+CALL my_sqrt(12, @outvalue, @var1);

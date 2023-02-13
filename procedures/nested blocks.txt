@@ -1,0 +1,67 @@
+DELIMITER $$
+CREATE PROCEDURE nested_blocks1( )
+	BEGIN
+	DECLARE outer_variable VARCHAR(20);
+		BEGIN
+		DECLARE inner_variable VARCHAR(20);
+		SET inner_variable='This is my private data';
+		END;
+	SELECT inner_variable,' This statement causes an error ';
+	END;
+$$
+
+
+
+
+DELIMITER $$
+CREATE PROCEDURE nested_blocks2( )
+	BEGIN
+	DECLARE my_variable varchar(20);
+	SET my_variable='This value was set in the outer block';
+		BEGIN
+		SET my_variable='This value was set in the inner block';
+		END;
+	SELECT my_variable, 'Changes in the inner block are visible in the outer block';
+END;
+$$
+
+
+
+
+
+Changes made to an overloaded variable in an inner block are not
+visible outside the block
+
+CREATE PROCEDURE nested_blocks3( )
+	BEGIN
+	DECLARE my_variable varchar(20);
+	SET my_variable='This value was set in the outer block';
+		BEGIN
+		DECLARE my_variable VARCHAR(20);
+		SET my_variable='This value was set in the inner block';
+		END;
+	SELECT my_variable, 'Can''t see changes made in the inner block';
+END;
+//
+
+
+
+
+
+
+Example of using a LEAVE statement to exit a labeled block
+
+CREATE PROCEDURE nested_blocks5( )
+	outer_block: BEGIN
+	DECLARE l_status int;
+	SET l_status=1;
+		inner_block: BEGIN
+		IF (l_status=1) THEN
+			LEAVE inner_block;
+		END IF;
+	SELECT 'This statement will never be executed';
+	END inner_block;
+SELECT 'End of program';
+END outer_block$$
+
+

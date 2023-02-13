@@ -1,0 +1,42 @@
+except for range conditionals, everything that can be done with if can be done with case and viceversa
+
+However, it is critical to realize that a CASE statement will raise an exception if
+none of the conditions apply. This means that in Example 4-15 if the
+customer_status was not one of 'PLATINUM', 'GOLD', 'SILVER', or 'BRONZE' then
+the following runtime exception would occur:
+ERROR 1339 (20000): Case not found for CASE statement
+
+
+CASE customer_status
+WHEN 'PLATINUM' THEN
+CALL apply_discount(sale_id,20); /* 20% discount */
+WHEN 'GOLD' THEN
+CALL apply_discount(sale_id,15); /* 15% discount */
+WHEN 'SILVER' THEN
+CALL apply_discount(sale_id,10); /* 10% discount */
+WHEN 'BRONZE' THEN
+CALL apply_discount(sale_id,5); /* 5% discount*/
+END CASE;
+
+
+
+Example 4-18. Using nested CASE statements and a block-scoped "not found"
+handler
+BEGIN
+DECLARE not_found INT DEFAULT 0;
+DECLARE CONTINUE HANDLER FOR 1339 SET not_found=1;
+CASE
+WHEN (sale_value>200) THEN
+CALL free_shipping(sale_id);
+CASE customer_status
+WHEN 'PLATINUM' THEN
+CALL apply_discount(sale_id,20);
+WHEN 'GOLD' THEN
+CALL apply_discount(sale_id,15);
+WHEN 'SILVER' THEN
+CALL apply_discount(sale_id,10);
+WHEN 'BRONZE' THEN
+CALL apply_discount(sale_id,5);
+END CASE;
+END CASE;
+END;

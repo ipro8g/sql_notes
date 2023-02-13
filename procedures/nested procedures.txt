@@ -1,0 +1,12 @@
+DELIMITER //
+
+CREATE PROCEDURE nested_procedure(IN square_n INT, OUT result NUMERIC(8,2))
+	NO SQL
+	BEGIN
+		DECLARE factor INT;
+		SET factor = 10;
+		
+		CALL my_sqrt(square_n, @res, factor);
+		
+		SET result = @res;
+	END//

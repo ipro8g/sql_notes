@@ -1,0 +1,81 @@
+CREATE PROCEDURE new_salary(IN emp_id INT, IN new_salary INT)
+BEGIN
+	IF new_salary < 5000 OR new_salary > 500000 THEN
+		SELECT "error new salary must be on 5000 500K range";
+	ELSE
+		UPDATE employees SET salary = new_salary WHERE employee_id = emp_id;
+	END IF;
+END//
+
+
+
+
+
+
+
+Example of a transaction that uses a savepoint
+
+1 CREATE PROCEDURE savepoint_example(in_department_name VARCHAR(30),
+2 in_location VARCHAR(30),
+3 in_address1 VARCHAR(30),
+4 in_address2 VARCHAR(30),
+5 in_zipcode VARCHAR(10),
+6 in_manager_id INT)
+7 BEGIN
+8 DECLARE location_exists INT DEFAULT 0;
+9 DECLARE duplicate_dept INT DEFAULT 0;
+10
+11
+12 START TRANSACTION;
+13
+14 -- Does the location exist?
+15 SELECT COUNT(*)
+16 INTO location_exists
+17 FROM locations
+18 WHERE location=in_location;
+19
+20 IF location_exists=0 THEN
+21
+22 INSERT INTO AUDIT_LOG (audit_message)
+23 VALUES (CONCAT('Creating new location',in_location));
+24
+25 INSERT INTO locations (location,address1,address2,zipcode)
+26 VALUES (in_location,in_address1,in_address2,in_zipcode);
+27 ELSE
+28
+29 UPDATE locations set address1=in_address1,
+30 address2=in_address2,
+31 zipcode=in_zipcode
+32 WHERE location=in_location;
+33
+34 END IF;
+35
+36 SAVEPOINT savepoint_location_exists;
+37
+38 BEGIN
+39 DECLARE DUPLICATE_KEY CONDITION FOR 1062;
+40 DECLARE CONTINUE HANDLER FOR DUPLICATE_KEY /*Duplicate key value*/
+41 BEGIN
+42 SET duplicate_dept=1;
+43 ROLLBACK TO SAVEPOINT savepoint_location_exists;
+44 END;
+45
+46 INSERT INTO AUDIT_LOG (audit_message)
+47 VALUES (CONCAT('Creating new department',in_department_name));
+48
+49 INSERT INTO DEPARTMENTS (department_name,location,manager_id)
+50 VALUES (in_department_name,in_location, in_manager_id);
+51
+52 IF duplicate_dept=1 THEN
+53
+54 UPDATE departments
+55 SET location=in_location,
+56 manager_id=in_manager_id
+57 WHERE department_name=in_department_name;
+58 END IF;
+59
+60 END;
+61
+62 COMMIT;
+63
+64 END;

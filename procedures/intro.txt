@@ -1,0 +1,104 @@
+The MySQL stored program language is relatively slow when it comes to performing arithmetic calculations. Avoid using stored programs to perform number crunching.
+
+
+-- the first sentence can be READS SQL, NO SQL, MODIFIES SQL DATA
+
+SHOW PROCEDURE STATUS; -- view all procedures
+
+SELECT ROUTINE_DEFINITION FROM INFORMATION_SCHEMA.ROUTINES
+WHERE ROUTINE_SCHEMA = 'yourdb' AND ROUTINE_TYPE = 'PROCEDURE' AND ROUTINE_NAME = "procedurename"; -- view procedure definition
+
+SELECT * FROM information_schema.parameters 
+WHERE SPECIFIC_NAME = 'your_procedure'; -- view parameters
+
+CALL procedure_name;
+
+DROP PROCEDURE procedure_name;
+
+- A PROCEDURE CANNOT BE USED IN ANY QUERY
+A FUNCTION CAN BE USED IN ANY QUERY
+
+- A FUNCTION ALWAYS RETURN AN EXPRESSION
+A PROCEDURE ACCOMPLISH A TASK
+
+- usually written in PL /SQL ( Procedural Language / SQL )
+
+- explicitly called by the user
+
+- a procedure should not contain any expression and it returns control to the caller before the normal end of the
+procedure is reached.
+
+- a PROCEDURE can be defined as a subrutine one or multiple functions
+
+SQL procedures can be used to create simple scripts for quickly querying transforming, updating data,
+generating basic reports, improve application performance, modularizing applications, and improve overall
+ database design, and database security. 
+
+e.g. create a procedure to increase the salary of every employee if is under the average:
+
+create procedure inc_salary
+(in average float, in perc int)
+language sql modifies sql data
+update test.employees set salary = (salary + (salary * perc)) where salary < (select avg(salary) from employees);
+
+DROP PROCEDURE: drop procedure_name;
+
+
+
+
+
+- in this example started and ended are the procedure arguments
+
+
+DELIMITER //
+
+	CREATE PROCEDURE get_products_limited(IN started INT, IN ended INT)
+	BEGIN
+		SELECT * FROM products LIMIT started, ended;
+END //
+	
+
+
+
+
+CREATE A PROCEDURE TO SHOW THE TOP THREE salaries BY DEPARTMENT
+
+NESTED PROCEDURE:
+
+DELIMITER //
+CREATE PROCEDURE topSal2(IN id INT)
+BEGIN
+SELECT a.salary, b.name FROM turing_employee a JOIN turing_department b ON a.departmentid = b.id WHERE a.departmentid = id ORDER BY a.salary DESC LIMIT 3;
+END//
+
+
+
+MAIN PROCEDURE:
+
+DELIMITER //
+CREATE PROCEDURE getTopThreeSalaries()
+BEGIN
+DECLARE iter INT DEFAULT 0;
+WHILE iter <= (SELECT MAX(id) FROM turing_department) DO
+CALL topSal2(iter);
+SET iter = iter + 1;
+END WHILE;
+END//
+
+
+OR
+
+
+DELIMITER //
+CREATE PROCEDURE getTopThreeSalaries3()
+BEGIN
+DECLARE iter INT DEFAULT 0;
+WHILE iter <= (SELECT MAX(id) FROM turing_department) DO
+SELECT a.salary, b.name FROM turing_employee a JOIN turing_department b ON a.departmentid = b.id WHERE a.departmentid = iter
+ ORDER BY a.salary DESC LIMIT 3;
+SET iter = iter + 1;
+END WHILE;
+END//
+
+
+

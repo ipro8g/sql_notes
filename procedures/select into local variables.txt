@@ -1,0 +1,6 @@
+CREATE PROCEDURE customer_sales(IN customer_id VARCHAR(255))
+BEGIN
+DECLARE total_sales NUMERIC(8,2);
+SELECT SUM(ord_amount) INTO total_sales FROM orders WHERE cust_code = customer_id;
+SELECT CONCAT("total for: ", customer_id, " is: ", total_sales);
+END//

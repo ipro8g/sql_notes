@@ -1,0 +1,174 @@
+* a cursor is a database object that returns a SELECT statement result set, and allows programmatic access to iterate over the rows most of the time from start to end of the result set
+
+
+
+
+* a cursor must be declared after all variables on a procedure definition
+
+CREATE PROCEDURE bad_cursor( )
+BEGIN
+DECLARE c CURSOR FOR (SELECT * from departments);
+DECLARE i INT;
+END;
+
+CREATE PROCEDURE good_cursor( )
+BEGIN
+DECLARE i INT;
+DECLARE c CURSOR FOR (SELECT * from departments);
+END;
+
+
+
+
+
+
+
+Cursor Statements
+
+The MySQL stored program language supports three statements for performing
+operations on cursors :
+
+OPEN
+
+Initializes the result set for the cursor. We must open a cursor before
+fetching any rows from that cursor. The syntax for the OPEN statement is
+very simple:
+OPEN cursor_name;
+
+FETCH
+
+Retrieves the next row from the cursor and moves the cursor "pointer" to
+the following row in the result set. It has the following syntax:
+FETCH cursor_name INTO variable list;
+The variable list must contain one variable of a compatible data type for
+each column returned by the SELECT statement contained in the cursor
+declaration. We'll discuss FETCH in more detail later in this chapter.
+
+CLOSE
+
+Deactivates the cursor and releases the memory associated with that cursor.
+The syntax for this statement is:
+
+CLOSE cursor_name ;
+
+We should close a cursor when we have finished fetching from it, or when
+we need to open that cursor again after changing a variable that affects the
+cursor's result set.
+
+is mandatory to define a handler to manage the end of the result set
+
+To avoid this error, we declare an error handler that will catch "no data to fetch"
+and set a flag (implemented as a local variable). We then interrogate that variable
+to determine if the last row has been fetched. Using this technique, we can
+terminate our loop and close the cursor with intuitive, easy-to-understand code.
+
+
+
+CREATE PROCEDURE cursor_test1()
+READS SQL DATA
+BEGIN
+	DECLARE var1 INT;
+	DECLARE var2 INT;
+	DECLARE var3 VARCHAR(255);
+	DECLARE done INT DEFAULT 0;
+	DECLARE cursor1 CURSOR FOR (SELECT salary, departmentid, name FROM turing_employee);
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+	OPEN cursor1;
+	simple_loop:LOOP
+		FETCH cursor1 INTO var1, var2, var3;
+		IF done = 1 THEN
+			LEAVE simple_loop;
+		END IF;
+		SELECT var1, var2, var3; -- we have programmatic access to any value here
+	END LOOP simple_loop;
+	CLOSE cursor1;
+END//
+
+
+
+
+
+
+
+
+
+DELIMITER //
+CREATE PROCEDURE cursor_test(IN in_dept_id INT)
+MODIFIES SQL DATA
+	BEGIN
+	DECLARE emp_id INT;
+	DECLARE emp_salary INT;
+	DECLARE dep_id INT;
+	DECLARE new_salary INT DEFAULT 0;
+	DECLARE done INT DEFAULT 0;
+	
+	DECLARE cursor1 CURSOR FOR (SELECT id, salary, departmentid FROM turing_employee WHERE departmentid = in_dept_id);
+	
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1; -- eof flag
+	CREATE TEMPORARY TABLE IF NOT EXISTS emp_raises (employee_id INT, department_id INT, new_salary INT);
+	
+	OPEN cursor1;
+	emp_loop: LOOP
+	
+		FETCH cursor1 INTO emp_id, emp_salary, dep_id;
+		
+		IF done = 1 THEN -- no more rows
+			LEAVE emp_loop; 
+		END IF;
+		
+		CALL new_salary_cursor(emp_id, new_salary);
+		
+		IF (new_salary <> emp_salary) THEN
+		
+			UPDATE turing_employee SET salary = new_salary WHERE id = emp_id;
+			
+			INSERT INTO emp_raises (employee_id, department_id, new_salary) VALUES (emp_id, dep_id, new_salary);
+		END IF;
+		
+		END LOOP emp_loop;
+		CLOSE cursor1;
+		
+		SELECT * FROM emp_raises ORDER BY emp_id; -- see the results
+END//
+
+
+
+
+
+* INCLUDE EACH HANDLER FOR EACH CURSOR IMPROVES READABILITY
+
+DECLARE CONTINUE HANDLER FOR NOT FOUND SET l_last_customer=1;
+SET l_last_customer=0;
+OPEN customer_csr;
+cust_loop:LOOP /* Loop through overdue customers*/
+	FETCH customer_csr INTO l_customer_id;
+	IF l_last_customer=1 THEN LEAVE cust_loop; END IF; /*no more rows*/
+		SET l_customer_count=l_customer_count+1;
+		sales_block: BEGIN
+		DECLARE l_last_sale INT DEFAULT 0;
+		DECLARE CONTINUE HANDLER FOR NOT FOUND SET l_last_sale=1;
+		OPEN sales_csr;
+		sales_loop:LOOP /* Get all sales for the customer */
+			FETCH sales_csr INTO l_sales_id;
+			IF l_last_sale=1 THEN 
+				LEAVE sales_loop; 
+			END IF; /*no more rows*/
+				CALL check_sale(l_sales_id); /* Check the sale status */
+					SET l_sales_count=l_sales_count+1;
+		END LOOP sales_loop;
+SET l_last_sale=0;
+CLOSE sales_csr;
+END sales_block;
+END LOOP cust_loop;
+SET l_last_customer=0;
+CLOSE customer_csr;
+
+
+
+* Exiting the Cursor Loop Prematurely
+
+Don't assume that you can only exit the cursor loop when the last row has been
+retrieved—you can issue a LEAVE statement at any time that you think that your
+processing has been completed. You may be looking for only one or a limited
+number of candidate records in the result set, or you may have detected some
+other condition suggesting that further processing is unnecessary

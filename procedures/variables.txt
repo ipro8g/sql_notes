@@ -1,0 +1,13 @@
+DELIMITER //
+CREATE PROCEDURE variable_demo()
+BEGIN
+DECLARE my_integer INT; -- 32bit integer
+DECLARE my_big_integer BIGINT; -- 64bit integer
+DECLARE my_currency NUMERIC(8,2); -- number with 8 digits and 2 decimals
+DECLARE my_float FLOAT DEFAULT 3.1416; -- floating point number
+DECLARE my_text TEXT; -- huge text
+DECLARE my_dob DATE DEFAULT "1957-04-20"; -- date
+DECLARE my_varchar VARCHAR(30) DEFAULT "Hi Universe"; -- up to 30 characters
+SET my_integer = 20;
+SET my_big_integer = POWER(my_integer, 3);
+END// 

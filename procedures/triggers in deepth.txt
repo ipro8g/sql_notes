@@ -1,0 +1,78 @@
+- there can exists only one comibnation for AFTER or BEFORE and INSERT, UPDATE, DELETE
+
+- AFTER or BEFORE indicates the moment of execution by a DML statement
+
+- FOR EACH ROW indicating that the statements within the trigger will 
+be executed once for every row inserted into the sales table
+
+- If there is more than one statement (inside the procedure), then the statements need to be enclosed in a BEGIN-END block
+
+
+
+
+
+* OLD and NEW keywords
+
+
+- To distinguish between the values of the columns "before" and "after" the
+relevant DML has fired, you use the NEW and OLD modifiers
+
+- If the trigger is an INSERT trigger, only the NEW value is available (there is no OLD
+value)
+
+- Within a DELETE trigger, only the OLD value is available (there is no NEW
+value)
+
+
+
+
+
+- CONSTRAINT TRIGGER
+
+CREATE TRIGGER account_balance_bu
+BEFORE UPDATE
+ON account_balance
+FOR EACH ROW
+BEGIN
+DECLARE dummy INT;
+IF NEW.balance<0 THEN
+SELECT 'Account balance cannot be less than 0';
+END IF;
+END;
+
+
+
+
+// ONLY FOR SUPER COMPUTERS
+
+WE WANT TO CREATE TRIGGER TO UPDATE ITS INDIVIDUAL (10% of sale) AND GROUP (5% of sale) COMISSION
+FOR SPECIFIC VENDOR TABLE AFTER A SELL IS DONE
+
+CREATE TABLE trig_sales (id INT NOT NULL AUTO_INCREMENT, vendor_id INT, 
+product_name VARCHAR(50), sale_amt DECIMAL(8,3), PRIMARY KEY(id));
+
+CREATE TABLE trig_comissions (id INT NOT NULL AUTO_INCREMENT, 
+vendor_id INT, group_com DECIMAL(6,3), ind_com DECIMAL(8,3), PRIMARY KEY(id), 
+FOREIGN KEY(id) REFERENCES trig_sales(id));
+
+DELIMITER //
+CREATE TRIGGER trig_sal_com_au
+AFTER INSERT ON trig_sales
+FOR EACH ROW
+BEGIN
+INSERT INTO trig_comissions VALUES (NEW.id, NEW.vendor_id, (NEW.sale_amt*0.05), (NEW.sale_amt*0.1));
+END//
+
+
+DELIMITER //
+CREATE PROCEDURE trig_sal_proc()
+BEGIN
+DECLARE i INT DEFAULT 0;
+DECLARE json_sales JSON DEFAULT (SELECT obj FROM json_test_id WHERE id = 10);
+loop1: WHILE i < JSON_LENGTH(JSON_EXTRACT(json_sales, '$.sales')) DO
+INSERT INTO trig_sales VALUES (i, JSON_EXTRACT(json_sales, CONCAT('$.sales[',i,'].vendor_id.id')), JSON_EXTRACT(json_sales, CONCAT('$.sales[',i,'].product_name')), JSON_EXTRACT(json_sales, CONCAT('$.sales[',i,'].sale_amt')));
+SET i = i + 1;
+END WHILE loop1;
+END//
+
+
