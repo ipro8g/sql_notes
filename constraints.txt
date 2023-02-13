@@ -1,0 +1,125 @@
+NOT NULL 	This constraint confirms that a column cannot store NULL value.
+
+CREATE TABLE mytest(
+agent_code char(6) NOT NULL UNIQUE ,
+agent_name char(25) NOT NULL UNIQUE ,
+working_area char(25) NOT NULL ,
+commission decimal CHECK( commission<1));
+
+
+
+
+UNIQUE 	This constraint ensures that each row for a column must have a different value.
+
+CREATE TABLE mytest(
+agent_code char(6) NOT NULL UNIQUE ,
+agent_name char(25) NOT NULL UNIQUE ,
+working_area char(25) NOT NULL ,
+commission decimal CHECK( commission<1));
+
+
+
+
+
+PRIMARY KEY 	This constraint is a combination of a NOT NULL constraint and a UNIQUE constraint.
+
+
+ This constraint ensures that the specific column or combination of two or more columns for a table have a unique identity which helps to find a particular record in a table more easily and quickly.
+
+
+
+
+
+CHECK 	A check constraint ensures that the value stored in a column meets a specific condition.
+
+CREATE TABLE mytest(
+agent_code char(6) NOT NULL UNIQUE ,
+agent_name char(25) NOT NULL UNIQUE ,
+working_area char(25) DEFAULT 'Mumbai',
+commission decimal(8,2) 
+CHECK(commission>.1 AND commission<.3));
+
+ALTER TABLE Persons
+ADD CHECK (Age>=18); 
+
+ALTER TABLE Persons
+DROP CONSTRAINT CHK_PersonAge; 
+
+
+CHECK WITH IN
+
+CREATE TABLE mytest(
+agent_code char(6) NOT NULL UNIQUE ,
+agent_name char(25) NOT NULL UNIQUE ,
+working_area char(25) CHECK
+( working_area IN('London','Brisban','Chennai','Mumbai')) ,
+commission decimal CHECK(commission<1)); 
+
+
+CHECK WITH LIKE
+
+CREATE TABLE mytest(
+ord_num decimal(6) NOT NULL UNIQUE ,
+ord_amount decimal(12,2) ,
+ord_date char(10) NOT NULL CHECK
+(ord_date LIKE '--/--/----' ),
+cust_code char(6) NOT NULL ,
+agent_code char(6) NOT NULL
+);    
+
+
+CHECK WITH LOGICAL OPERATORS
+
+CREATE TABLE mytest(
+agent_code char(6) NOT NULL UNIQUE ,
+agent_name char(25) NOT NULL UNIQUE ,
+working_area char(25) ,
+commission decimal(8,2) ,
+CHECK(commission<.20 OR working_area='London')); 
+
+CREATE TABLE mytest (
+agent_code char(6) NOT NULL UNIQUE ,
+agent_name char(25) NOT NULL UNIQUE ,
+working_area char(25) ,
+commission decimal(8,2) ,
+CHECK((commission<.14 AND working_area='London')
+OR (commission<.15 AND working_area='Mumbai')
+OR (commission<.13 AND working_area='New York'))); 
+
+
+
+
+DEFAULT 	This constraint provides a default value when specified none for this column.
+
+CREATE TABLE mytest(
+agent_code char(6) NOT NULL UNIQUE ,
+agent_name char(25) NOT NULL UNIQUE ,
+working_area char(25) DEFAULT 'Mumbai',
+commission decimal(8,2)); 
+
+
+
+
+FOREIGN KEY 	A foreign key constraint is used to ensure the referential integrity of the data. in one table to match values in another table.
+
+
+
+
+
+DELETE ON CASCADE
+
+The table contains a PRIMARY KEY on 'itemcode' and a FOREIGN KEY on 'company_id' column which references to the 'company_id' column of 'company' table.
+
+the following SQL statement can be used : 
+
+CREATE TABLE mytest(
+tranno decimal NOT NULL,
+company_id varchar(6),
+itemcode varchar(10),
+coname varchar(35),
+itemname varchar(35),
+iqty integer,
+PRIMARY KEY(itemcode),
+FOREIGN KEY(company_id)
+REFERENCES company (company_id)
+ON DELETE CASCADE);

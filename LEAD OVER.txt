@@ -1,0 +1,55 @@
+LEAD OVER points to the next row in the table
+
+BY DEFAULT LEAD(column_name, <1 position>)
+LEAD(column_name, <n positions>) OVER (ORDER BY column_name)
+LAG(column_name, <n positions>) OVER (ORDER BY column_name)
+
+- we want to know the info about the employees whose earn less than
+the next hired employee
+
+* SELECT ename, sal, hiredate, next_sal FROM (SELECT ename, sal, hiredate, LEAD(sal) OVER(ORDER BY hiredate DESC) next_sal FROM emp_cook) alias WHERE sal < next_sal;
+
+
+
+- we want to display all the continue ranges of project from
+
+PROJ_ID PROJ_START PROJ_END
+------- ----------- -----------
+ 1 01-JAN-2020 02-JAN-2020
+ 2 02-JAN-2020 03-JAN-2020
+ 3 03-JAN-2020 04-JAN-2020
+ 4 04-JAN-2020 05-JAN-2020
+ 5 06-JAN-2020 07-JAN-2020
+ 6 16-JAN-2020 17-JAN-2020
+ 7 17-JAN-2020 18-JAN-2020
+ 8 18-JAN-2020 19-JAN-2020
+ 9 19-JAN-2020 20-JAN-2020
+ 10 21-JAN-2020 22-JAN-2020
+ 11 26-JAN-2020 27-JAN-2020
+ 12 27-JAN-2020 28-JAN-2020
+ 13 28-JAN-2020 29-JAN-2020
+ 14 29-JAN-2020 30-JAN-2020
+
+we want to
+find the range of dates for consecutive projects, you would like to return all rows
+where the current PROJ_END equals the next row’s PROJ_START
+
+* SELECT proj_id, proj_start, proj_end FROM (SELECT proj_id, proj_start, proj_end, LEAD(proj_start) 
+OVER (ORDER BY proj_id) next_project_start FROM project_cook) alias WHERE next_proj_start = proj_end;
+
+PROJ_ID PROJ_START PROJ_END
+------- ----------- -----------
+ 1 01-JAN-2020 02-JAN-2020
+ 2 02-JAN-2020 03-JAN-2020
+ 3 03-JAN-2020 04-JAN-2020
+ 6 16-JAN-2020 17-JAN-2020
+ 7 17-JAN-2020 18-JAN-2020
+ 8 18-JAN-2020 19-JAN-2020
+ 11 26-JAN-2020 27-JAN-2020
+ 12 27-JAN-2020 28-JAN-2020
+ 13 28-JAN-2020 29-JAN-2020
+
+- and the results only show those rows where the proj_end equals to the next proj_start
+
+
+

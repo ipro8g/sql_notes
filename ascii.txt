@@ -1,0 +1,7 @@
+- the ASCII function returns corresponding ASCII code for a given character
+
+SELECT ASCII('A');
+
+returns 0 if arg is empty
+
+reutrns null if arg is null

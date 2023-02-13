@@ -1,0 +1,53 @@
+- REGEXP is not case sensitive, except for BINARY Strings: e.g. SELECT * FROM author WHERE aut_name REGEXP BINARY '^w';
+
+^) to point the begining of the string:
+
+    - find an author name starting with w
+    * SELECT * FROM author WHERE aut_name REGEXP '^w';
+
+$) ending of a string
+
+    * SELECT * FROM author WHERE aut_name REGEXP 's$';
+
+
+
+
+- containing string
+
+    //select all names whose contains t
+    *  SELECT * FROM author WHERE aut_name REGEXP 't';
+
+
+
+
+- containing multiple characters
+
+    //select all names whose contains x, y or z
+    * SELECT * FROM author WHERE aut_name REGEXP '[xyz]';
+
+
+
+
+- containing character range
+    
+    //select all names whose contains letters in a range from a to d
+    *SELECT * FROM author WHERE aut_name REGEXP '[a-d]';
+
+
+
+
+- CONTAINING SPECIFIC NUMBER OF CHARACTERS
+
+    //SELECT THOSE NAMES WHOSE CONTAINS EXACLTY 12 CHARACTERS
+    * SELECT * FROM author WHERE aut_name REGEXP '^............$';
+
+
+
+
+
+- CONTAINING SPECIFIC NUMBER OF CHARACTERS
+
+- The following statement will find the author’s name containing exactly 12 characters. Use ‘^’ and ‘$’ match the beginning and ending of the name and ‘{12}’ have been after ‘.’ for repeating ‘.’ twelve times.
+
+* SELECT * FROM author WHERE aut_name REGEXP '^.{12}$';
+

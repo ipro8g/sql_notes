@@ -1,0 +1,51 @@
+-group by is used with select statements
+
+-the aggregate functions are used to get aditional information for every group and apply them to an individual group
+
+-where clause is used to retrieve records but does not work on group results for that purpose we use having
+
+
+
+-group by with count
+
+    -select count(department_id), department_id from employees group by department_id;
+
+
+
+-group by with sum
+
+    -select sum(salary), department_id from employees group by department_id;
+
+
+
+-group with sum and count
+
+    -select department_id 'department', count(*) 'workers', sum(salary) 'total amount' from employees group by department_id;
+
+
+
+-group with multiple columns: each department has several positions, each positions has several workers.
+
+    -select count(*) 'workers', department_id 'department', job_id 'position', sum(salary) 'total salary' from employees group by department_id, job_id;
+
+
+
+-group by adding where clause
+
+    -select department_id, sum(salary) from employees where manager_id = 103 group by department_id;
+
+
+
+-having
+
+    -select department_id, count(*) from employees group by department_id having count(*) > 2;
+
+
+
+
+
+
+- USING GROUP BY, ORDERS BY IN JOINS
+
+* select distinct agents.agent_code, agents.agent_name, sum(orders.advance_amount) from agents join orders on agents.agent_code = orders.agent_code group by agent_code, agent_name order by agents.agent_code;
+

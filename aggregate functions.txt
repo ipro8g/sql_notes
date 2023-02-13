@@ -1,0 +1,119 @@
+1) COUNT
+
+-count, returns the number of rows in a table satisfying the criteria specified in the WHERE clause
+
+    -count(all | distinct column)-> select count(distinct agent_code) from agents2;
+
+    -count(*) -> this counts every row even the NULL ones
+
+    -count(column_name) -> this counts not null values
+
+    -count multiple tables
+
+        -select (select count(*) from employees) as total_employees, (select count(*) from departments) as total_departments, (select count(*) from orders) as total_orders from dual;
+
+    -backticks use
+
+        -select (select count(*) from employees) as `total employees`, (select count(*) from departments) as `total departments`, (select count(*) from orders) as `total orders` from dual;
+
+    -count using where clause
+
+    -select (select count(*) from employees where salary > 10000) as total_employees, (select count(*) from departments where department_id < 250) as total_departments, (select count(*) from orders where ord_amount > 3000) as total_orders from dual;
+
+
+
+
+
+2) SUM (all | distinct `column name`) over expression;
+
+    -returns sum of a specific column, aggregate functions and subqueries not allowed
+
+        -select sum(advance_amount) from orders;
+
+    -sum with multiple columns
+
+        -select sum(opening_amt), sum(receive_amt) from customer;
+
+        -select sum(opening_amt + receive_amt) from customer;
+
+    -sum using where clause
+
+        -select sum(advance_amount) from orders where agent_code = ('A003');
+
+    -sum using count
+
+        -select sum(opening_amt) 'total amount', count(*) 'number of customers', cust_country 'country' from customer group by cust_country order by sum(opening_amt) desc;
+
+        -select agent_code, sum(advance_amount), count(*) 'number of orders' from orders group by agent_code order by `number of orders` desc;
+
+        select agent_code, sum(advance_amount), count(*) 'number of orders' from orders group by agent_code order by `number of orders` desc, sum(advance_amount) desc;
+
+
+
+
+
+3) SUM and COUNT using variables
+
+    -select count(*) as `my count` from customer;
+
+
+
+
+
+4) SUM and COUNT with INNER JOIN
+
+    -this will return a temporaty table containing sum and count from customer table joined into select from agents statement, number of clients and total opening amount for every agent
+
+    select ag.agent_code, ag.agent_name, cus.mycount, cus.mysum from agents ag inner join(select agent_code, count(*) as mycount, sum(opening_amt) as mysum from customer group by agent_code) cus on cus.agent_code = ag.agent_code;
+
+
+
+
+
+5) AVG -> select avg(all | distinct expression) over window clause;
+
+    -select avg(advance_amount) from orders;
+
+    -select agent_code, sum(opening_amt), count(*) 'number of customers', round(avg(receive_amt)) from customer group by agent_code;
+
+
+    -avg with WHERE clause
+
+        -select avg(advance_amount) from orders where ord_amount > 1000 and ord_amount <= 4500;
+
+
+    -avg CAST
+
+        -select cast(avg(advance_amount) as decimal(4, 2)) from orders;
+
+        -select cast(avg(advance_amount) as decimal(4, 2)) 'decimal advance amount' from orders;
+
+        -select cast(avg(advance_amount) as decimal(4, 2)) `decimal advance amount` from orders;
+
+        -select cast(avg(advance_amount) as decimal(4, 2)) as 'decimal advance amount' from orders;
+
+        -select cast(avg(advance_amount) as decimal(4, 2)) as `decimal advance amount` from orders;
+
+
+    -avg with count
+
+        -select count(*) 'number of customer', avg(opening_amt) 'amount average' from customer group by agent_code;
+
+
+    -avg with date
+
+        -select round(avg(des_date - ord_date)) 'despatch days average' from despatch;
+
+        -select cast(avg(des_date - ord_date) as decimal(2, 0)) as 'despatch days average' from despatch;
+
+        -select avg(advance_amount) 'advance average', agent_code from orders group by agent_code;
+
+        -select agent_code, sum(opening_amt) 'Op. Amt.', round(avg(outstanding_amt)) 'Rou. Avg.' from customer group by agent_code;
+
+
+ROUND
+
+* round(avg(comission), 2)
+
+
+

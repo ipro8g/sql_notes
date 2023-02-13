@@ -1,0 +1,29 @@
+- from this:
+
+DEPTNO EMPS
+------ ----------
+ 10 CLARK
+ 10 KING
+ 10 MILLER
+ 20 SMITH
+ 20 ADAMS
+ 20 FORD
+ 20 SCOTT
+ 20 JONES
+ 30 ALLEN
+ 30 BLAKE
+ 30 MARTIN
+ 30 JAMES
+ 30 TURNER
+ 30 WARD
+
+- we want this: 
+
+DEPTNO EMPS
+------- ------------------------------------
+ 10 CLARK,KING,MILLER
+ 20 SMITH,JONES,SCOTT,ADAMS,FORD
+ 30 ALLEN,WARD,MARTIN,BLAKE,TURNER,JAMES
+
+
+* SELECT deptno, GROUP_CONCAT(ename ORDER BY deptno SEPARATOR, ',') AS emps FROM employee_cook GROUP BY deptno

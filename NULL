@@ -1,0 +1,16 @@
+ONE NULL VALUE WILL AFFECT THE ENTIRE QUERY 
+
+E.G.
+
+* SELECT * FROM employees WHERE (salary+commission) > ANY (SELECT (salary+commission) FROM employees);
+
++--------+----------+----------+------------+------------+---------+------------+--------+
+| emp_id | emp_name | job_name | manager_id | hire_date  | salary  | commission | dep_id |
++--------+----------+----------+------------+------------+---------+------------+--------+
+|  64989 | ADELYN   | SALESMAN |      66928 | 1991-02-20 | 1700.00 |     400.00 |   3001 |
+|  65271 | WADE     | SALESMAN |      66928 | 1991-02-22 | 1350.00 |     600.00 |   3001 |
+|  66564 | MADDEN   | SALESMAN |      66928 | 1991-09-28 | 1350.00 |    1500.00 |   3001 |
++--------+----------+----------+------------+------------+---------+------------+--------+
+
+
+ONLY WILL USES THE ROWS WHOSE commission IS NOT NULL, IGNORING THE REST OF DATA

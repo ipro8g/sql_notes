@@ -1,0 +1,55 @@
+https://dev.mysql.com/doc/refman/8.0/en/trigger-syntax.html
+
+- SHOW TRIGGERS;
+
+*) PL/SQL ITS CASE SENSITIVE
+
+A trigger is a stored PL/SQL program unit associated with a specific database table (EXECUTED AFTER A DML sentence). Unlike the stored procedures ( or functions ) which have to be explicitly invoked, these triggers implicitly get fired (executed) whenever the table is affected by any SQL operation.
+The triggers are executed when an INSERT, UPDATE, or DELETE statement is issued against the associated table. These types of procedures are called database triggers. A trigger can include SQL and PL/SQL statements to execute as a unit and can invoke other stored procedures. However, procedures and triggers differ in the way that they are invoked. While a procedure is explicitly executed by a user or an application, a trigger is implicitly fired(executed) when a triggering INSERT, UPDATE, or DELETE statement is issued, no matter what user is connected or what application is being used.
+A database trigger has three parts - triggering event, trigger constraint (optional) and trigger action. 
+
+//EXAMPLE 1 - THIS WILL TRIGGER AN ACCOMULATOR
+
+1) create table account (acct_num int, amount decimal(10, 2));
+
+2) create trigger ins_sum before insert on account for each row set @sum = @sum + new.amount;
+
+3) insert into account (acct_num, amount) values (1, 100), (2, 100), (3, 100), (4, 100);
+
+4) set @sum = 0;
+
+5) select @sum as 'total amount inserted';
+
+6) drop trigger test.ins_sum;
+
+
+
+
+// EXAMPLE 2 FOLLOWING EXAMPLE 1 - THIS WILL TRIGGER A WITHDRAWLS ACCOMULATOR
+
+1) CREATE TRIGGER ins_transaction BEFORE INSERT ON account FOR EACH ROW PRECEDES ins_sum SET @deposits = @deposits + IF(NEW.amount > 0, NEW.amount, 0), @withdrawals = @withdrawals + IF(NEW.amount < 0, -NEW.amount, 0);
+
+2) set @withdrawls = 0;
+
+3) insert into account (acct_num, amount) values (17, -250);
+
+4) select @withdrawls;
+
+
+
+* WE WANT TO CREATE A TRIGGER THAT WILL EXECUTED AFTER A NEW EMPLOYEE INSERTED
+AND COMPUTE THEIR INCOME PERCENTAGE IN A TOTAL
+
+
+
+DELIMITER //
+CREATE TRIGGER turing_emp_perc AFTER INSERT ON turing_employee FOR EACH ROW
+BEGIN
+	SET NEW.income_percentage = ((NEW.salary /(SELECT SUM(salary) FROM turing_employee))*100);
+END//
+
+* THIS WILL ONLY UPDATE THE INSERTED ROW
+
+
+
+

@@ -1,0 +1,3 @@
+this query will return " a manager" replacing any null value in manager_id column
+
+SELECT COALESCE(manager_id, "a manager") manager_id FROM employees;

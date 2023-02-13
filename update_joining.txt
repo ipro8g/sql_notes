@@ -1,0 +1,1 @@
+UPDATE emp_cook2 e, new_sal_cook ns SET e.sal = ns.sal, e.comm = ns.sal/2 WHERE e.deptno = ns.deptno 

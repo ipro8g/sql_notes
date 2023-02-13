@@ -1,0 +1,7 @@
+- select the two last characters from a string
+
+SELECT SUBSTR(job, length(job)-1) FROM employee_cook;
+
+Extract a substring from a string (start at position 5, extract 3 characters):
+
+SELECT SUBSTR("SQL Tutorial", 5, 3) AS ExtractString;

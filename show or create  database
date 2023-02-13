@@ -1,0 +1,5 @@
+show databases;
+
+1) create database
+
+    -create database db1;

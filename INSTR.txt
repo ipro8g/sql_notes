@@ -1,0 +1,5 @@
+What is an SQL query for finding the position of the alphabet (‘A’) in the FIRST_NAME column of Ayushi.
+
+Ans. The query that can be used is:
+
+Select INSTR(FIRST_NAME, BINARY'a') from Worker where FIRST_NAME = 'Ayushi';

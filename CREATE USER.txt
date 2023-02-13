@@ -1,0 +1,7 @@
+- from the root user
+
+* CREATE USER 'root2'@localhost IDENTIFIED BY 'pass';
+
+- start session
+
+* mysql -u root2 'pass2'

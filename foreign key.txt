@@ -1,0 +1,56 @@
+1) The structure and data type of PRIMARY KEY and FOREIGN KEY must be same.
+
+
+
+2) The values of the FOREIGN KEY columns in each row of the referencing table have to match with the values of the corresponding primary key columns of a row in the referenced table.
+
+CREATE TABLE customer1(
+cust_code char(6) NOT NULL PRIMARY KEY,
+cust_name char(25),
+cust_city char(25),
+agent_code char(6),
+FOREIGN KEY(agent_code)
+REFERENCES agents (agent_code)
+);
+
+
+
+3) create foreign key without using the FOREIGN KEY keyword. 
+
+CREATE TABLE mytest(
+cust_code char(6) NOT NULL PRIMARY KEY,
+cust_name char(25),
+cust_city char(25),
+agent_code char(6) 
+REFERENCES agents(agent_code));
+
+
+
+4) create multiple foreign key columns
+
+CREATE TABLE mytest(
+ord_num decimal(6) NOT NULL PRIMARY KEY,
+ord_amount decimal(12,2),
+advance_amount decimal(12,2) NOT NULL,
+ord_date date NOT NULL,
+cust_code char(6) NOT NULL,
+agent_code char(6) NOT NULL,
+ord_description char(60) NOT NULL,
+FOREIGN KEY(cust_code,agent_code)
+REFERENCES customer1 (cust_code,agent_code));
+
+
+
+5) multiple foreign keys
+
+Create table Table1_sal
+(
+  salid varchar(2),`enter code here`
+  addid varchar(2),
+  id varchar(2),
+  PRIMARY KEY (salid),
+  index(addid),
+  index(id),
+  FOREIGN KEY (addid) REFERENCES Table1_Addr(addid),
+  FOREIGN KEY (id) REFERENCES Table1(id)
+)

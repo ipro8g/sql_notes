@@ -1,0 +1,152 @@
+1) subquery is a query embed inside another query
+
+2) a subquery may occur in:
+
+    - a SELECT clause
+    - a FROM clause
+    - a WHERE clause
+
+3) usually is used into any statement: 
+
+    -SELECT
+    -UPDATE
+    -INSERT
+    -DELETE
+
+4) can be nested into another subquerys
+
+5) can be used along with comparison operators <, >, =, also can be a multiple-row operator like IN, ANY or ALL
+
+6) a subquery is also called an inner query or inner select, while the statement containing the subquery is also called an outer query or outer select
+
+7) the inner query executes first before its parent query so that the results of an inner query can be passed to the outer query
+
+8) subquery can be used to perform the following taks:
+
+    - compare an expression to the result of the query
+    - determine if an expression is included in the results of the query
+    - check whether the query select any rows
+
+9) the subquery executes once before the main query, and the outer query uses the inner query results
+
+
+
+
+
+    -to get the name on student_data table where student had more than the 'V002' in the student_marks table scores without any additional info
+
+        *select a.studentid, a.name, b.total_marks from student_data a, student_marks b where a.studentid = b.studentid and a.studentid in(select studentid from student_marks where total_marks > (select total_marks from student_marks where studentid = 'V002'));
+
+        *select a.studentid, a.name, b.total_marks from student_data a, student_marks b where a.studentid = b.studentid and b.total_marks > (select total_marks from student_marks where studentid = 'V002');
+
+
+
+
+-subqueries with INSERT
+
+    * insert into neworders (select * from orders where advance_amount in(2000, 5000);
+
+
+-subqueries with UPDATE
+
+    * update neworders set ord_date = '15-JAN-10' where (ord_amount - advance_amount) < (select min(ord_amount) from orders);
+
+
+-subqueries with DELETE
+
+    * delete from neworders where advance_amount < (select max(advance_amount) from orders);
+
+
+-single row subqueries
+
+    * select * from agents where agent_code = (select agent_code from agents where agent_name = 'Alex');
+
+    * select *, (select avg(ord_amount) from orders where ord_date = '20-APR-08') 'total average' from orders where ord_amount > (select avg(ord_amount) from orders where ord_date = '20-APR-08');
+
+
+
+
+
+-subqueries in a HAVING clause
+
+    - display data from those agents whose have the ord_amount average equals to the ord_amount average of tht agent whose code is 'A008'
+
+        * select avg(ord_amount), count(*), agent_code from orders group by agent_code having avg(ord_amount) = (select avg(ord_amount) from orders where agent_code = 'A008');
+
+
+
+
+
+-ERROR on single row subqueries
+                                            this will return multiple rows
+    * select * from foods where item_id = (select item_id from foods where item_id like '%a');
+
+
+
+
+
+- multiple rows subqueries using IN operator
+
+    * select * from orders where agent_code in(select agent_code from agents where working_area = 'bangalore');
+
+
+
+
+
+-multiple rows subqueries using ANY operator
+
+    * select * from agents where agent_code = any(select agent_code from customer where cust_country = 'UK');
+
+    * select * from orders where agent_code = (select distinct agent_code from orders where cust_code = 'C00005');
+
+
+
+
+
+
+-correlated subqueries
+
+    *  select * from orders where agent_code = (select agent_code from agents where agent_name = 'Alex');
+
+                - traditional aliases query
+
+            - select agents.agent_code, orders.ord_amount, orders.cust_code, orders.ord_num from orders orders, agents agents where agents.agent_code = orders.agent_code and agents.agent_name = 'Alex';
+
+
+
+
+
+
+
+
+    - select all employees whose has other subordinates employees
+
+
+    * select * from employees a where exists(select employee_id from employees b where b.manager_id = a.employee_id);
+
+    * select * from employees a where not exists(select employee_id from employees b where b.manager_id = a.employee_id);
+
+
+
+                - traditional aliases query
+
+    * select distinct a.employee_id, a.first_name from employees a, employees b where a.employee_id = b.manager_id;
+
+
+
+
+
+
+- get job_id, avg(salary) from employees table where that job_id min_salary avg from jobs table is less than the avg(min_salary) from the jobs table
+
+    * select distinct job_id, avg(salary) from employees where job_id in(select job_id from jobs where min_salary < (select avg(min_salary) from jobs)) group by job_id;
+
+
+
+
+
+-get all info from orders table where ord_amount is less than 2000 and ord_date is less than 2008/10/01 and advance_amount is less than any outstanding_amt from customer table where grade equals 3 and cust_country is not in india and opening_amt is less than 7000 and his comission is less than 0.12
+
+    * select * from orders where ord_amount < 2000 and ord_date != '01-sep-08' and advance_amount < any(select outstanding_amt from customer where grade = 3 and cust_country != 'india' and opening_amt < 7000 and agent_code in(select agent_code from agents where comission = 0.12));
+
+        

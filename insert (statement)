@@ -1,0 +1,14 @@
+-insert into agents (agent_code, agent_name, working_area, comission, phone_no) values ('A001', 'jodi', 'london', .12, '075-1238798');
+
+
+
+-insert using select (use * if the number of columns and data types correspond)
+
+    -insert into test3 (new_column2, id) select * from test2 where id >= 3;
+
+
+-insert using select with order by
+
+    -insert into test2 (new_column2, id) select new_column2, id from test3 where id between 4 and 11 order by id desc;
+
+    -insert into daysorder (`ord_date`, `total ord_amount`, `total advance_amount`, `number of orders`) select `ord_date`, sum(`ord_amount`), sum(`advance_amount`), count(*) from `orders` group by `ord_date`;   -- all rows from grouping data by date in orders table

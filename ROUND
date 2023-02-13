@@ -1,0 +1,3 @@
+The ROUND() is a mathematical function that allows you to round a number to a specified number of decimal places.
+
+ROUND(n, d);   d => decimal places

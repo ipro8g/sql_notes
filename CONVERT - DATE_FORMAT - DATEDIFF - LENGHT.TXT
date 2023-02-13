@@ -1,0 +1,56 @@
+CONVERT ANY TYPE TO ANOTHER
+
+SELECT CONVERT(1234567890, VARCHAR(255));
+
+
+DO NO TRY TO COMPARE DIFFERENT DATA TYPES
+
+E.G.
+
+- from the following table, write a SQL query to find those departments where more than average number of employees works. Return department name. 
+
+* SELECT b.dep_name FROM employees a JOIN department b ON a.dep_id = b.dep_id GROUP BY a.dep_id HAVING COUNT(a.emp_id) > (SELECT AVG(aux_table.workers) FROM (SELECT COUNT(emp_id) workers FROM employees GROUP BY dep_id) aux_table);
+
+Empty set (0.002 sec)
+
+
+THE AVG MUST BE CONVERTER TO INT
+
+* SELECT b.dep_name FROM employees a JOIN department b ON a.dep_id = b.dep_id GROUP BY a.dep_id HAVING COUNT(a.emp_id) > CONVERT((SELECT AVG(aux_table.workers) FROM (SELECT COUNT(emp_id) workers FROM employees GROUP BY dep_id) aux_table), int);
+
++----------+
+| dep_name |
++----------+
+| AUDIT    |
++----------+
+
+
+
+
+
+
+
+
+
+
+
+
+
+DATEDIFF in days DATE1 - DATE2
+
+SELECT DATEDIFF(now(), '2000-01-01');
+
+
+
+DATE_FORMAT(NOW(), '%d-%m-%Y');
+
+15-07-2022
+
+
+
+
+
+
+RETURN LENGTH OF A STRING
+
+LENGTH('str') = 3

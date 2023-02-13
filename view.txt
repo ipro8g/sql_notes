@@ -1,0 +1,30 @@
+-SEE ALL VIEWS INSIDE DATABASE
+
+* SHOW FULL TABLES WHERE table_type LIKE 'VIEW';
+
+
+
+- In RDBMS , a view is a virtual table because it does not exist in its own right, but appears to the user as if it did.
+
+- a VIEW its an object not contains any data but represents a query and the ouput of that query represents its content
+
+- like a query can be treated as a base table and could support all operations INSERT, DELETE, UPDATE, JOIN among with other tables or VIEWS
+
+- a VIEW can be accesed by a SELECT statement, and can retrieve dat from multiple tables 
+
+
+
+* create view bangalore_agents as select agent_code, agent_name from agents where working_area = 'bangalore';
+
+* select * from bangalore_agents;
+
+* drop view bangalore_agents;
+
+
+
+
+e.g. create a view called usa comissions, for each agent compute his comission: 15% of each trait opening_amt + receive_amt from the customer table, show his name, his customer name and his comission, the cust_country must be usa
+
+* create view usa_comissions as select agents.agent_name 'vendor name', customer.agent_code 'vendor code', customer.cust_name 'customer name', (customer.opening_amt + customer.receive_amt) 'total amount', ((customer.opening_amt + customer.receive_amt) * 0.15) 'comission 15%', customer.cust_country from agents, customer where customer.agent_code = agents.agent_code and customer.cust_country = 'usa';
+
+* select * from usa_comissions;

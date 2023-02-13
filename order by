@@ -1,0 +1,42 @@
+-order by multiple columns
+
+    -it gives priority to the first order column
+
+        -select agent_code, agent_name, working_area, comission from agents order by agent_code, working_area;
+
+        -select agent_code, agent_name, working_area, comission from agents order by working_area asc, comission desc; (here inside the same working_area group will order descending by comission)
+
+
+
+
+
+
+
+
+- USING GROUP BY, ORDERS BY IN JOINS
+
+* select distinct agents.agent_code, agents.agent_name, sum(orders.advance_amount) from agents join orders on agents.agent_code = orders.agent_code group by agent_code, agent_name order by agents.agent_code;
+
+
+
+
+
+
+
+
+
+- USING ORDER BY WITH GROUP BY AND UNION (NOTICE ORDER BY CLAUSE AT END WITHOUT table FOR GLOBAL ORDERING)
+
+-  From the following tables, write a SQL query to find those salespersons who generated the largest and smallest orders on each date. Sort the result-set on ORD_NO. Return salesperson ID, name, order no., highest on/lowest on, order date. 
+
+* SELECT orders2.ord_date, 'MAX Order', MAX(orders2.purch_amt), orders2.salesman_id, salesman.name, orders2.ord_no FROM orders2 JOIN salesman ON orders2.salesman_id = salesman.salesman_id GROUP BY orders2.ord_date UNION SELECT orders2.ord_date, 'MIN Order', MIN(orders2.purch_amt), orders2.salesman_id, salesman.name, orders2.ord_no FROM orders2 JOIN salesman ON orders2.salesman_id = salesman.salesman_id GROUP BY orders2.ord_date ORDER BY ord_no;
+
+
+
+
+
+- IN UNIONS THE ORDER CLAUSE MUST BE IN THE LAST QUERY
+
+-  From the following table, write a SQL query to find the even or odd values. Return "Even" for even number and "Odd" for odd number
+
+* SELECT srno, 'EVEN' FROM tablefortest3 WHERE MOD(col_val, 2) = 0 UNION SELECT srno, 'ODD' FROM tablefortest3 WHERE MOD(col_val, 2) != 0 ORDER BY srno;

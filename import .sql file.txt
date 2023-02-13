@@ -1,0 +1,5 @@
+open mysql console
+
+mysql -u root
+
+source c:/database.sql

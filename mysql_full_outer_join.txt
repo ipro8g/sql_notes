@@ -1,0 +1,32 @@
+This outer join manages to return the new employee but lost the OPERATIONS
+department from the original result set. The final result set should return a row for
+YODA as well as OPERATIONS, such as the following:
+
+ DEPTNO DNAME ENAME
+---------- ------------ --------
+ 10 ACCOUNTING CLARK
+ 10 ACCOUNTING KING
+ 10 ACCOUNTING MILLER
+ 20 RESEARCH ADAMS
+ 20 RESEARCH FORD
+ 20 RESEARCH JONES
+ 20 RESEARCH SCOTT
+ 20 RESEARCH SMITH
+ 30 SALES ALLEN
+ 30 SALES BLAKE
+ 30 SALES JAMES
+ 30 SALES MARTIN
+ 30 SALES TURNER
+ 30 SALES WARD
+ 40 OPERATIONS NULL
+ NULL NULL YODA
+
+Alternatively, since MySQL does not yet have a FULL OUTER JOIN, UNION the
+results of the two different outer joins:
+1 select d.deptno,d.dname,e.ename
+2 from dept d right outer join emp e
+3 on (d.deptno=e.deptno)
+4 union
+5 select d.deptno,d.dname,e.ename
+6 from dept d left outer join emp e
+7 on (d.deptno=e.deptno)

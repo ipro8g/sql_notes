@@ -1,0 +1,19 @@
+IN can take expresions (SELECT SEAT FROM AIRCRAFT WHERE TYPE > 767) or IN (<Item#1>,<Item#2>,<Item#3>)
+
+ANY or SOME only can take (SELECT SEAT FROM AIRCRAFT WHERE TYPE > 769)
+
+
+
+
+
+SELECT * FROM agents WHERE working_area IN (SELECT working_area FROM agents WHERE commission BETWEEN 0.14 AND 0.15);
+
+
+SELECT * FROM agents WHERE working_area IN ('Bangalore', 'Chennai', 'London', 'Torento');
+
+
+
+
+SELECT * FROM agents WHERE working_area = ANY (SELECT working_area FROM agents WHERE commission BETWEEN 0.14 AND 0.15);
+
+SELECT * FROM agents WHERE working_area = SOME (SELECT working_area FROM agents WHERE commission BETWEEN 0.14 AND 0.15);

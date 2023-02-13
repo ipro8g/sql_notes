@@ -1,0 +1,26 @@
+-despite the fact that where cannot be used in multiple rows, having its used used as a multiple where
+
+-can be used like a where clause
+ 
+     * select * from employees having first_name like 'a%';
+
+
+
+
+-can be used for filter data along with where
+
+     * select * from employees where job_id = 'it_prog' having first_name like 'a%';
+
+
+
+
+-having with group by
+
+     * select department_id, count(*) from employees group by department_id having count(*) > 2;
+
+
+
+
+-having with where filter and aggregate functions, do a query showing the maximum payment and avg receive amount stats for every city filtering customer where grade is > 2 and avg is > 500, ordering results by sum opening_amt:
+
+    * select cust_city 'city', sum(opening_amt) 'total opening amount', avg(receive_amt) 'receive amount average', max(payment_amt) 'maximum payment' from customer where grade = 2 group by cust_city having avg(receive_amt) > 500 order by sum(opening_amt);

@@ -1,0 +1,180 @@
+* window functions able to use aggregate a non-aggregate values in a single query
+* keyword OVER denotes that we are using a window function
+* PARTITION BY will "group" the rows based on a criteria
+* window functions not allowed in FROM, WHERE, GROUP BY, or HAVING clauses.
+
+
+
+
+* there are three types of window functions
+
+1) AGGREGATE
+
+* SUM()
+* COUNT()
+* MAX()
+* MIN()
+* AVG()
+
+
+
+2) RANKING
+
+* ROW_NUMBER()
+* RANK()
+* DENSE_RANK()
+* PERCENT_RANK()
+* NTILE()
+
+
+
+3) VALUE
+
+* LAG()
+* LEAD()
+* FIRST_VALUE()
+* LAST_VALUE()
+* NTH_VALUE()
+
+
+
+
+* we want to know the difference between salary and avg salary from each employee
+in each department
+
+SELECT department_id, salary, AVG(salary) OVER (PARTITION BY department_id) FROM employees;
+
+
+
+
+
+* we want to know the differecne between each employee salary with the job_id avg salary in each department (group by two columns) ordering each avg salary in each department descending
+
+SELECT department_id, job_id, salary, AVG(salary) OVER (PARTITION BY deparment_id, job_id)) "AVG SALARY" FROM employees;
+
+
+
+
+ROW_NUMBER()
+* we want to know all salary ranking of employees according to their job_ib in from high to low salary
+
+SELECT employee_id, job_id, salary, ROW_NUMBER() OVER (PARTITION BY job_id ORDER BY salary DESC) "RANKI" from employees ORDER BY "RANKI" ASC;
+
+
+
+
+
+
+RANK()
+* similar to row number but the rows will be organized according to the rank
+and allows repeated values
+
+* we want to order all employees salaries according to their job_id and show
+the rank on the salary
+
+SELECT employee_id, job_id, salary, RANK() OVER (PARTITION BY job_id ORDER BY salary DESC) "salary rank in his position" FROM employees;
+
+value 1
+value 2
+value 2 -> rank behavior skip values
+value 4
+value 5
+
+
+
+
+
+
+DENSE_RANK()
+* similar to rank but avoid that skip behavior
+
+SELECT employee_id, job_id, salary, DENSE_RANK() OVER (PARTITION BY job_id ORDER BY salary DESC) "salary rank in his position" FROM employees;
+
+value 1
+value 2
+value 2 
+value 3 -> dense rank will avoid that skip
+value 4
+
+
+
+
+
+
+
+PERCENT_RANK()
+* each row represents a fraction in a sumatory total
+
+SELECT employee_id, job_id, salary, PERCENT_RANK() OVER (PARTITION BY job_id ORDER BY salary DESC) "salary rank in his position" FROM employees;
+
+
+
+
+
+
+
+
+
+If you use the NTILE() function to divide nine rows into four groups, you will end up at the first group with three rows and other three groups with four rows.
+
+SELECT employee_id, job_id, salary, NTILE(4) OVER (PARTITION BY job_id ORDER BY salary DESC) "salary rank in his position" FROM employees;
+
+* this will show all rows in a 4 different buckets according to his salary classification for every job_id
+
+
+
+
+
+
+
+* LAG(column, offset, "default value if column is null") LEAD(column, offset, "default value if column is null") -> default: LAG(column, 1) LEAD(column, 1)
+
+id	seller_name	sale_value
+
+3	Stef		7000
+1	Alice		12000
+2	Mili		25000
+4 	Jeff 		4500
+
+
+
+* we want to see who is behind to each sale in sale_value terms
+
+SELECT seller_name, sale_value, LAG(sale_value) OVER (ORDER BY sale_value) "previous sale value" FROM lag_test;
+
+
+
+* we want to see who is ahead to each sale in sale_value terms
+
+SELECT seller_name, sale_value, LEAD(sale_value) OVER (ORDER BY sale_value) "next sale value" FROM lag_test;
+
+
+* also lag and lead can be used to comparison queries
+
+SELECT 
+   year,
+   total_sale AS current_total_sale,
+   LAG(total_sale) OVER(ORDER BY year) AS previous_total_sale,
+   total_sale - LAG(total_sale) OVER(ORDER BY year) AS difference
+FROM annual_sale;
+
+
+
+
+
+
+
+* FIRST_VALUE(column), NTH_VALUE(column)
+
+these functions avoid the need for a join or subquery
+
+
+
+SELECT id, seller_name, sale_value, FIRST_VALUE(sale_value) OVER (ORDER BY sale_value DESC) "TOP SALE AMOUNT" FROM lag_test; 
+
+
+SELECT id, seller_name, sale_value, NTH_VALUE(sale_value, 3) OVER (ORDER BY sale_value DESC) "THIRD TOP SALE AMOUNT" FROM lag_test; 
+
+NTH VALUE WILL NO DISPLAY VALUES OVER THE SPECIFIED RANGE, E.G. in this case will only
+show NTH_VALUE() OVER 3 AND 4 POSITIONS
+ 

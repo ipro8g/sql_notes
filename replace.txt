@@ -1,0 +1,15 @@
+SELECT REPLACE("this is a string", "s", ""); => "thi i a tring"
+
+
+- we want to replace all vowels
+
+1 select ename,
+ 2 replace(
+ 3 replace(
+ 4 replace(
+ 5 replace(
+ 6 replace(ename,'A',''),'E',''),'I',''),'O',''),'U','')
+ 7 as stripped1,
+ 8 sal,
+ 9 replace(sal,0,'') stripped2
+10 from emp

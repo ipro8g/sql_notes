@@ -1,0 +1,69 @@
+A FUNCTION CAN BE USED IN ANY QUERY
+A PROCEDURE CANNOT BE USED IN ANY QUERY
+
+A FUNCTION ONLY CAN CONTAIN IN VARIABLES (IN KEYWORD IS NOT USED)
+A PROCEDURE CAN MANAGE IN, OUT, INOUT VARIABLES
+
+A FUNCTION RETURNS ONLY SINGLE VALUE (WHOSE TYPE MUST BE DEFINED)
+A PROCEDURE CAN RETURN RESULT SET
+
+
+
+
+A FUNCTION IS DETERMINISTIC , if it always performs the same actions
+and returns the same results when provided with the same inputs.
+"NOT DETERMINISTIC CONTAINS SQL"   -> as default
+
+as an example abs(x)  always will return same value -> deterministic
+random() will give different results -> non deterministic
+
+
+
+
+
+- usually written in PL /SQL ( Procedural Language / SQL )
+
+- explicitly called by the user
+
+//VIEW ALL CUSTOM FUNCTIONS DEFINED AND STORED
+* show function status;
+
+//ENABLE FUNCTIONS FUNCTIONALITY:
+
+sudo /opt/lampp/bin/mysql_upgrade -u root -p //HERE GOES THE PASSWORD
+sudo /opt/lampp/bin/mysql_upgrade -u root
+
+
+
+//CREATE A FUNCTION TO RETURN PERCENTAGE:
+
+delimiter //
+create function custom_percent (salary int, perc int)
+returns float deterministic
+begin
+declare result float;
+result = (salary / 100) * perc;
+return result;
+end; //
+
+
+
+
+// CREATE A FUNCTION USING COMPUTE VARIABLES AND A SUBQUERY (MYSQL)
+
+DELIMITER //
+CREATE FUNCTION getNthHighestSalary(off INT)
+RETURNS INT DETERMINISTIC
+BEGIN
+DECLARE offs INT;
+DECLARE result INT;
+SET offs = (off - 1);
+SET result = (SELECT salary FROM turing_test ORDER BY salary DESC LIMIT 1 OFFSET offs);
+RETURN result;
+END//
+
+
+
+* select concat(first_name, ' ', last_name) 'name', custom_percent(salary, 12) '12% on salary' from employees;
+
+

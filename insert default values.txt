@@ -1,0 +1,7 @@
+- insert the default value specified with constraint keyword during table creation
+
+* INSERT INTO testtablee VALUES ();
+
+- insert null values
+
+* INSERT INTO testtablee (field1, field2) VALUES (null, 86); 

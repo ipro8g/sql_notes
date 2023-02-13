@@ -1,0 +1,1 @@
+SELECT CASE WHEN a.hiredate > b.hiredate THEN DATEDIFF(a.hiredate, b.hiredate) ELSE DATEDIFF(b.hiredate, a.hiredate) END FROM emp_cook a JOIN emp_cook b WHERE a.ename = 'WARD' AND b.ename = 'ALLEN';

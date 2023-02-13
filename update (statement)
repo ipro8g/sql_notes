@@ -1,0 +1,9 @@
+-update multiple columns
+
+    -UPDATE customer1 SET phone_no='Phone No',cust_city='Kolkata',grade=1 WHERE agent_code='A002';
+
+-update using a subquery
+
+    -update agents2 set comission = (comission * 1.2) where agent_code in(select agent_code from customer where grade >= 2);
+
+    -update agents2 set comission = comission * 1.02 where agent_code in(select orders.agent_code from orders, agents2 where agents2.agent_code = orders.agent_code);

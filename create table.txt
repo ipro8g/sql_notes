@@ -1,0 +1,9 @@
+CREATE TABLE testcity (city varchar(255), FOREIGN KEY(city) REFERENCES customer(cust_city));
+
+- copy another table structure
+
+* CREATE TABLE accounts_copy LIKE accounts;
+
+- copy another table structure and data
+
+* CREATE TABLE accounts_copy AS (SELECT * FROM accounts);

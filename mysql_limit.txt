@@ -1,0 +1,11 @@
+(LIMIT ONLY APPLY TO = > < OPERATORS)
+'This version of MariaDB doesn't yet support 'LIMIT & IN/ALL/ANY/SOME subquery'
+
+
+- From the following table, write a SQL query to find those employees who get second-highest salary. Return all the fields of the employees. 
+
+* SELECT employee_id, first_name, salary FROM employees WHERE salary = (SELECT salary FROM employees ORDER BY salary DESC LIMIT 1,1);
+
+- WE WANT TO DISPLAY THE FIVE HIGHEST SALARIES
+
+* SELECT * FROM emp_cook ORDER BY sal DESC LIMIT 5;

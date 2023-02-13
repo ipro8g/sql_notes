@@ -1,0 +1,12 @@
+works similar to view except is not stored prmanently
+
+With CTE_Orders_Store AS
+(
+Select shop_id,
+product_id,
+brand_id,
+shop_name,
+quantity
+from order_detail where UPPER(shop_name) like '%store%'
+)
+Select * from CTE_Orders_Store where quantity> 50;

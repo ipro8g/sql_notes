@@ -1,0 +1,12 @@
+Q.6 What is an SQL Query for printing the FIRST_NAME from Worker Table after the removal of white spaces from right side.
+
+Ans. The query that can be used is:
+
+Select RTRIM(FIRST_NAME) from Worker;
+You must read about SQL Query Optimization tools
+
+Q.7 Write an SQL Query for printing the DEPARTMENT from Worker Table after the removal of white spaces from the left side.
+
+Ans. The query that you can use is:
+
+Select LTRIM(DEPARTMENT) from Worker;

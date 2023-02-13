@@ -1,0 +1,75 @@
+- a sql union, combines results from two or more queries and makes a result set, similary to joins with some slightly differences:
+
+    1) in a JOIN the columns of joining tables could be different, in UNION order and columns must be the same
+
+            e.g.
+
+            * select agents.agent_code, orders.cust_code from agents join orders on orders.agent_code = agents.agent_code;
+
+            * select agents.agent_code from agents union select cust_code from orders;
+
+
+             - is evident that is no any relation between the two queries in the second, so the result will be sum of two records
+
+
+
+    2) the UNION display the rows from queries after each other, while JOIN display columns each other
+
+    3) The queries are all executed independently but their output is merged. 
+
+    4) cannot use aliases cause the columns will take the name of the first query
+
+
+
+- UNION basic rules:
+
+    1) number of columns and order of columns of all queries must be same
+
+    2) the data types of columns in each query must be compatible
+
+    3) returned column names are taken from the first query
+
+    4) by default union takes distinct values, if want to display duplicates must be ALL keyword
+
+
+
+
+
+
+- UNION ALL
+
+    * select prod_name, prod_code, com_name from product union all select prod_name, prod_code, com_name from purchase;
+
+
+
+
+
+- UNION WITH WHERE (useless cause we cannot select pur_qty field in record)
+
+    * select prod_name, prod_code, com_name from product where life > 6 union all select prod_name, prod_code, com_name from purchase where pur_qty > 10;
+
+
+
+
+- UNION table to itself
+
+    * select prod_name, prod_code, com_name from purchase where pur_qty > 6 union all select prod_name, prod_code, com_name from purchase where pur_amount > 100000;
+
+
+
+
+
+- CANNOT USE ORDER BY IN INDIVIDUAL QUERIES
+
+    * select * from nobel_win where year = 1970 and subject not in ('chemistry', 'economics') union select * from nobel_win where year = 1970 and subject in('chemistry', 'economics');
+
+
+
+
+- HOW TO USE ORDER BY IN INDIVIDUAL QUERIES
+
+From the following table, write a SQL query to find the details of 1970 Nobel Prize winners. Order the result by subject, ascending except ‘Chemistry’ and ‘Economics’ which will come at the end of result set. Return year, subject, winner, country, and category.
+
+* SELECT * FROM nobel_win WHERE year = 1970 ORDER BY CASE WHEN subject IN('economics', 'chemistry') THEN 1 ELSE 0 END ASC, subject, winner;
+
+

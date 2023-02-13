@@ -1,0 +1,54 @@
+
+1) Character String Types
+
+
+2) Boolean (SQL) - [tinyint(1)] MySQL 5.7 - [bit] SQL Server 2014 
+
+    -true
+    -false
+    -unknown (null)
+
+
+
+3) Binary Types
+
+    - BINARY LARGE OBJECT (BLOB)
+
+
+
+
+4) Numeric Types
+
+    -INTEGER
+    -SMALLINT
+    -BIGINT
+    -DECIMAL (PRECISION, SCALE)  - 10.06 = DECIMAL(4,2)
+    -NUMERIC
+    -FLOAT
+    -REAL
+    -DOUBLE PRECISION
+
+    -BIT (MySQL)
+
+
+
+3) Datetime Types
+
+    -DATE
+    -TIME
+
+
+4) Interval Type - NON MySQL
+    
+    -year/month
+        -YEAR
+        -MONTH
+
+    -day/time
+        -DAY
+        -HOUR
+        -MINUTE
+        -SECOND
+    
+5) XML Types pretty CHAR like
+    Collection Types

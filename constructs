@@ -1,0 +1,7 @@
+
+    Queries : Retrieves data against some criteria.
+    Statements : Controls transactions, program flow, connections, sessions, or diagnostics.
+    Clauses : Components of Queries and Statements.
+    Expressions : Combination of symbols and operators and a key part of the SQL statements.
+    Predicates : Specifies conditions.
+

@@ -1,0 +1,15 @@
+* select * from nobel_win where subject in('physics', 'economics') and year in(1970, 1971);
+
+
+
+//WITH LOGICAL OPERATORS
+* select * from nobel_win where year > 1972 and subject = 'prime minister' and winner = 'menachem begin' or winner = 'yitzhak rabin';
+
+//WITH IN OPERATOR
+* select * from nobel_win where year > 1972 and subject = 'prime minister' and winner IN('menachem begin', 'yitzhak rabin');
+
+
+
+
+//NOT IN
+* SELECT * FROM nobel_win WHERE year = 1970 AND subject NOT IN('physiology', 'economics');

@@ -1,0 +1,31 @@
+1) basic select
+
+    -select information from source;
+
+2) select with arithmetic ops
+
+    -SELECT first_name, last_name, salary, (12*salary + 400) FROM employees;
+
+3) select using aliases
+
+    -SELECT first_name AS 'First Name', last_name AS 'Last Name', salary AS 'Salary' FROM employees;
+
+4) handling null values, (cannot use comparison ops)
+
+    -SELECT * FROM foods WHERE company_id IS NULL;
+
+5) select distinct
+
+    -SELECT DISTINCT agent_code FROM orders;
+
+6) select distinct with multiple columns
+
+    -SELECT DISTINCT agent_code, ord_amount,cust_code FROM orders WHERE agent_code='A002';
+        (this will return all rows except those that the combination of columns have same values)
+
+7) select with text embbed
+
+    * select 'for', count(*) ' no of agents in', working_area, ' agents', round(avg(comission), 2), ' %' from agents  group by working_area having count(*) < 3;
+
+
+

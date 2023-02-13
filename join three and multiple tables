@@ -1,0 +1,14 @@
+To get 'ord_num' and 'cust_code' columns from the table 'orders' and 'cust_name' and 'cust_city' columns from the table 'customer' and 'agent_code' column from the table 'agents' after a joining, with following conditions
+
+2. 'orders' and 'customer' tables are child table of 'agents' table because 'agent_code' is primary key in 'agents' table and foreign key in 'customer' and 'orders' table,
+
+3. 'orders' table is child table of 'customer' table because 'cust_code' is primary key in 'customer' table and foreign key in 'orders' table,
+
+4. 'cust_city' and 'working_area' of 'customer' and 'agents' table must be same,
+
+5. 'cust_code' of 'orders' and 'customer' table must be same,
+
+6. 'agent_code' of 'orders' and 'agents' table must be same,
+
+
+* select orders.ord_num, orders.cust_code, customer.cust_name, customer.cust_city, agents.agent_code from agents JOIN customer ON agents.agent_code = customer.agent_code AND agents.working_area = customer.cust_city JOIN orders ON customer.cust_code = orders.cust_code;

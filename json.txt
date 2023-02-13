@@ -1,0 +1,256 @@
+* NOTE WHEN DEFINING A JSON TABLE BE SURE TO ADD AN AUTO_INCREMENT id FIELD TO MAKE THIS MORE EASY
+REFERING TO EACH ROW
+
+If you define a MySQL column to be the json type, then MySQL will automatically validate every value which you attempt to insert or update in that column. For example, the following snippet will fail, because the JSON is malformed (missing a closing } at the end of the object):
+
+DROP TABLE IF EXISTS t1;
+CREATE TABLE t1 (jdoc JSON);
+INSERT INTO t1 VALUES('{"key1": "value1", "key2": "value2"');
+
+
+
+
+
+Creating JSON Data
+The standard defines the following functions to create JSON strings:
+
+json_object([key] <expr> value <expression> [,…])
+
+
+
+
+* JSON_TYPE
+
+SELECT JSON_TYPE(obj) FROM json_test;
++----------------+
+| JSON_TYPE(obj) |
++----------------+
+| OBJECT         |
+| OBJECT         |
+| OBJECT         |
+| OBJECT         |
+| OBJECT         |
+| OBJECT         |
+| OBJECT         |
+| OBJECT         |
+| ARRAY          |
++----------------+
+
+
+* JSON_LENGTH (of array)
+
+JSON_LENGTH(JSON_EXTRACT(the_json, '$.array_key'));
+
+
+
+
+* JSON_OBJECT
+
+INSERT INTO json_test VALUES (JSON_OBJECT("screen","120 inch","resolution","800 x 600 pixels","ports",
+JSON_OBJECT("hdmi",1,"usb",1,"vga",1),"speakers",JSON_OBJECT("left",1,"right",1,"center",1,"power","20W")));
+
+
+
+
+
+
+
+
+
+
+* JSON_ARRAY
+
+INSERT INTO json_test VALUES (JSON_OBJECT("network", JSON_ARRAY("ADSL", "IOT", "HTTP"), "manufacturer", "HITACHI", 
+"price", "430", "OS", "vndos"));
+
+
+
+* NOTE
+
+TO ADD VALUES TO AN ARRAY IT MUST BE IN A KEY VALUE JSON FORMAT
+
+UPDATE json_test SET obj = JSON_MERGE_PRESERVE(obj, JSON_OBJECT("network","GSM")) WHERE attributes IS NOT NULL;
+
+
+
+* NOTE
+
+TO ADD ELEMENT TO AN ARRAY INSIDE JSON DOCUMENT
+
+UPDATE json_test SET obj = JSON_MERGE_PRESERVE(obj, JSON_OBJECT("OS","dos")) 
+WHERE JSON_EXTRACT(obj, '$.manufacturer') = 'HITACHI';
+
+
+
+
+
+
+
+
+
+* JSON_MERGE_PRESERVE
+
+INSERT INTO json_test VALUES(JSON_MERGE_PRESERVE(
+		'{"sensor_type": "CMOS"}' ,
+		'{"processor": "Digic DV III"}' ,
+		'{"scanning_system": "progressive"}' ,
+		'{"mount_type": "PL"}' ,
+		'{"monitor_type": "LCD"}'
+	));
+
+
+- OR
+
+JSON_MERGE_PRESERVE(
+		JSON_OBJECT("sensor_type" , "CMOS") ,
+		JSON_OBJECT("processor" , "Digic DV II") ,
+		JSON_OBJECT("scanning_system" , "progressive") ,
+		JSON_OBJECT("mount_type" , "PL") ,
+		JSON_OBJECT("monitor_type" , "LED")
+	)
+
+- ARRAY BEHAVIOR
+
+SELECT JSON_MERGE_PRESERVE(
+	'{"name":"item"},
+	'{"network": "GSM"}' ,
+	'{"network": "CDMA"}' ,
+	'{"network": "HSPA"}' ,
+	'{"network": "EVDO"}'
+);
+
+WILL RESULT AS
+
+{"name":"item","network": ["GSM", "CDMA", "HSPA", "EVDO"]}
+
+
+
+
+
+
+
+* JSON_MERGE_PATCH
+
+SELECT JSON_MERGE_PATCH('{"name":"item"}',
+	'{"network": "GSM"}',
+	'{"network": "CDMA"}',
+	'{"network": "HSPA"}',
+	'{"network": "EVDO"}');
+
+WILL RESULT AS
+
+{"name": "item", "network": "EVDO"}
+
+MANTINING THE LAST VALUE IF ITS HAS THE SAME KEY, 
+SO USE JSON_MERGE_PRESERVE TO PRESERVE DATA
+
+
+
+
+
+
+
+
+* JSON_EXTRACT
+
+
+
+SIMPLE KEY
+
+SELECT obj FROM json_test WHERE JSON_EXTRACT(obj, '$.weight') = "143 grams";
+
+
+
+
+SIMPLE SUBDOCUMENT
+
+SELECT obj FROM json_test WHERE JSON_EXTRACT(obj, '$.speakers.left') = "10 watt";
+
+
+
+
+EXTRACT VALUE FROM ARRAY
+
+SELECT obj FROM json_test WHERE JSON_EXTRACT(obj, '$.network[2]') = "HSPA";
+
+
+
+UPDATE obj FROM json_test SET obj = JSON_REMOVE(obj, '$.network[2]') WHERE attributes IS NULL;
+
+
+
+
+
+
+* JSON_INSERT (only if the property does not exists already)
+
+
+
+NEW KEY
+
+UPDATE json_test SET attributes = JSON_INSERT(attributes, '$.chipset', 'Qualcomm') WHERE JSON_TYPE(obj) = "ARRAY";
+
+
+UPDATE json_test_id SET obj = JSON_INSERT(obj, "$.network", JSON_ARRAY("GSM", "CDMA", "EVDO", "HSPA")) WHERE id = 3;
+
+
+
+
+
+
+
+* JSON_REPLACE (substitutes the property only if it is found)
+
+REPLACE VALUE
+
+UPDATE json_test SET attributes = JSON_REPLACE(attributes, '$.chipset', 'Qualcomm Snapdragon') 
+WHERE JSON_TYPE(obj) = "ARRAY";
+
+
+
+
+
+* JSON_SET (function will add the property if it is not found else replace it 
+like JSON_INSERT and JSON_REPLACE at the same time)
+
+UPDATE json_test SET attributes = JSON_SET(attributes, '$.body_color_bottom', 'green') WHERE JSON_TYPE(obj) = "ARRAY";
+
+
+
+
+
+
+
+* JSON_REMOVE
+
+REMOVE ELEMENT FROM ARRAY
+
+UPDATE json_test_id SET obj = JSON_REMOVE(obj, '$.network[2]') WHERE id = 3;
+
+
+
+DELETING THE KEY VALUE
+
+UPDATE json_test_id SET obj = JSON_REMOVE(obj, '$.network') WHERE id = 3;
+
+
+UPDATE json_test_id SET obj = JSON_INSERT(obj, JSON_OBJECT("network", JSON_ARRAY("GSM", "CDMA", "EVDO", "HSPA")) WHERE id = 3;
+
+
+
+
+
+
+
+* HOW TO LOOP TROUGH JSON
+
+DELIMITER //
+CREATE PROCEDURE trig_sal_proc()
+BEGIN
+DECLARE i INT DEFAULT 0;
+DECLARE json_sales JSON DEFAULT (SELECT obj FROM json_test_id WHERE id = 10);
+loop1: WHILE i < JSON_LENGTH(JSON_EXTRACT(json_sales, '$.sales')) DO
+INSERT INTO trig_sales VALUES (i, JSON_EXTRACT(json_sales, CONCAT('$.sales[',i,'].vendor_id.id')), JSON_EXTRACT(json_sales, CONCAT('$.sales[',i,'].product_name')), JSON_EXTRACT(json_sales, CONCAT('$.sales[',i,'].sale_amt')));
+SET i = i + 1;
+END WHILE loop1;
+END//

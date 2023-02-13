@@ -1,0 +1,5 @@
+The following SQL statement copies only the German customers into a new table:
+
+SELECT * INTO CustomersGermany
+FROM Customers
+WHERE Country = 'Germany';

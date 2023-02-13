@@ -1,0 +1,19 @@
+it does not allow to add any record in a table that contains the foreign key unless the reference table containing a corresponding primary key.
+
+If any record in referenced table (i.e. the table who contain primary key) is deleted, all the corresponding records in the referencing table will be deleted for the referential integrity.
+
+
+//example: if we try to add a record in orders table using a non existing value agent_code which is the foreign key, that will produce this error:
+
+* Cannot add or update a child row: a foreign key constraint fails (`test`.`orders`, CONSTRAINT `key_const` FOREIGN KEY (`agent_code`) REFERENCES `agents` (`agent_code`)) 
+
+
+
+
+
+* select agents.agent_code, agents.agent_name, orders.ord_num, orders.advance_amount from agents join orders on agents.agent_code = orders.agent_code;
+
+
+
+
+

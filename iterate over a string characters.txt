@@ -1,0 +1,3 @@
+SELECT SUBSTR("KING", id, 1) AS C FROM t10 WHERE id <= LENGTH("KING");
+
+table T10 contains numbers from 1 to 10 in id field

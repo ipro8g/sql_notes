@@ -1,0 +1,1 @@
+CREATE TABLE dept_cook2 LIKE dept_cook;

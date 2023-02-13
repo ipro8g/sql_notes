@@ -1,0 +1,28 @@
+1) where using between
+
+    -SELECT employee_id, first_name, last_name, salary FROM employees WHERE salary BETWEEN 4000 AND 6000;
+
+2) where data using expression in where block
+
+    -SELECT first_name,last_name,salary,(salary+(salary*commission_pct)) "Net Salary" FROM employees WHERE (salary(salary*commission_pct)) BETWEEN 10000 AND 15000 AND commission_pct>0;
+
+3) where using in to test multiple values in a list
+
+    -SELECT employee_id, first_name, last_name, department_id, salary FROM employees WHERE department_id IN(60,90,100);
+
+4) where using like
+
+    -SELECT employee_id, first_name, last_name, department_id, salary FROM employees WHERE first_name LIKE('S%');
+
+5) where with null values
+
+    -SELECT employee_id, first_name, last_name, department_id, salary FROM employees WHERE department_id IS NULL;
+    --SELECT employee_id, first_name, last_name, department_id, salary FROM employees WHERE department_id IS NOT NULL;
+
+6) where with logical operators
+   
+    -SELECT employee_id, first_name, last_name, department_id, salaryFROM employees WHERE first_name LIKE('S%') AND salary>=4000;
+
+    -SELECT employee_id, first_name, last_name, department_id, salary FROM employees WHERE first_name LIKE('S%') OR first_name LIKE('A%')
+
+    -SELECT employee_id, first_name, last_name, department_id, salary FROM employees WHERE department_id NOT IN (90, 60, 100);

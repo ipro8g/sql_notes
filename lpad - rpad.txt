@@ -1,0 +1,10 @@
+THIS QUERY WILL ADD 20 dots TO BEFORE EACH manager_id value
+
+SELECT LPAD(manager_id, 20, ".") FROM employees;
+
+
+
+THIS QUERY WILL ADD 20 dots TO AFTER EACH manager_id value
+
+SELECT RPAD(manager_id, 20, ".") FROM employees;
+

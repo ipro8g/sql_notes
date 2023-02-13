@@ -1,0 +1,12 @@
+1 select data
+2 from V
+3 where data regexp '[0-9a-zA-Z]' = 0
+
+
+
+- we want to detect rows whose NOT contain alphanumeric data
+using ^ NOT operator
+
+1 select data
+2 from V
+3 where data regexp '[^0-9a-zA-Z]' = 0

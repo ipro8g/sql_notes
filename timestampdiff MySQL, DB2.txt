@@ -1,0 +1,11 @@
+It is not necessary that both the expression are of the same type. One may be a date and another is datetime. A date value is treated as a datetime with a default time part '00:00:00'. The unit for the result is given by another argument. 
+
+The unit should be one of the following : FRAC_SECOND (microseconds), SECOND, MINUTE, HOUR,DAY, WEEK, MONTH, QUARTER, or YEAR.
+
+Syntax:
+
+TIMESTAMPDIFF(year, "1958-02-20", NOW());
+
+TIMESTAMPDIFF(unit,datetime_expr1,datetime_expr2);
+
+ returns difference between datetime_expr1 - datetime_expr2

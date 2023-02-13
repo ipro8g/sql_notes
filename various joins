@@ -1,0 +1,1 @@
+* select a.des_num, a.des_date, sum(b.ord_amount) from despatch a join orders b on a.ord_amount = b.ord_amount group by a.des_num, a.des_date;

@@ -1,0 +1,6 @@
+- IF expr1 IS NULL IFNULL() RETURNS expr2 OTHERWISE reutrns expr1
+
+* IFNULL(expr1, expr2);
+
+
+SELECT IFNULL(emp_supvm "NULO") emp_supv FROM employee;

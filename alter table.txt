@@ -1,0 +1,47 @@
+0) change table name -> alter table old_name rename new_name;
+
+1) add column  
+
+    -alter table table add new_column;
+    -alter table table add column new_column;
+
+2) drop column
+    
+    -alter table table drop new_column;
+
+3) alter column
+
+    -alter table test2 modify new_column2 varchar(255) default 'OK';
+
+4) add constraint/drop constraint
+
+    -alter table test2 add constraint check_value unique(id);
+        if we try to add dupplicate value (Duplicate entry '0' for key 'check_value')
+
+    -alter table test2 drop constraint check_value;
+
+    
+    add drop primary key
+
+        -alter table test2 add constraint new_const primary key(id);
+
+    add drop foreign key
+
+        -alter table test2 add constraint new_key foreign key(new_column2) references test3(new_column2);
+
+    add check constraint
+
+        -alter table test3 add constraint check_value check(new_column2 != 'NOT OK');
+
+    change constraints 
+
+        -drop existing constraint and create again
+
+
+5) change size data of a column
+
+    -alter table test2 modify new_column2 varchar(200);
+
+6) change column name
+
+    -alter table test3 change new_column new_column2 varchar(255);

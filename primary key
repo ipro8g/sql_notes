@@ -1,0 +1,17 @@
+1) primary key could be made by multiple columns:
+
+    CREATE TABLE Persons 
+    (ID int NOT NULL,
+    LastName varchar(255) NOT NULL,
+    FirstName varchar(255),
+    Age int,
+    CONSTRAINT PK_Person PRIMARY KEY (ID,LastName)); 
+
+In the example above there is only ONE PRIMARY KEY (PK_Person). However, the VALUE of the primary key is made up of TWO COLUMNS (ID + LastName).
+
+
+
+
+2) drop
+
+ALTER TABLE Persons DROP PRIMARY KEY; 

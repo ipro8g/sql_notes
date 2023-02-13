@@ -1,0 +1,23 @@
+- show indexes from table
+
+- index are objects that contains specific columns of a table
+
+- working with high amount of records this index will do the query faster
+
+
+
+
+* create index custcity on customer(cust_city);
+
+- multiple values
+
+* create index custcity_country on customer(cust_city, cust_country);
+
+
+- index usage
+
+// previously to stablish the relationship, due by referetial integrity both tables must contains the same values
+
+    * alter table testcity add constraint custcity_country foreign key(city) references customer(cust_city);
+
+* select distinct customer.cust_country, testcity.city from customer, testcity USE INDEX(custcity_country) where customer.cust_city = testcity.city;

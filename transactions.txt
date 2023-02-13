@@ -1,0 +1,129 @@
+A TRANSACTION IS A DUAL OR MULTIPLE OPERATION MADE SIMULTANEOUSLY
+
+
+
+------------------------------------------------------------------------------
+
+SET AUTOCOMMIT = 0;
+
+START TRANSACTION;
+
+DO STUFF HERE
+
+IF CONDITION = TRUE THEN COMMIT;
+
+ELSE ROLLBACK END;
+
+
+------------------------------------------------------------------------------
+
+
+e.g. sonsider a banking database transaction involving three tables
+
+personal_account
+
+credit_company
+
+vendor_account
+
+- a customer wants to buy a item with the 50% founding by a credit_company:
+
+
+* update personal_account set total_money = (total_money - (item_value / 2)) where personal_id = `id`;
+
+* update credit_company set personal_debt = personal_debt + (item_value / 2) where debt_id = `id`;
+
+* update sales set amount = item_value where customer_id = `id`;
+
+
+
+- A TRANSACTION MUST COMPLETE THIS (ACID) RULES
+
+ATOMIC: a transaction its a single logical unit of work with its all data modifications otherwise none of them can be done
+
+CONSISTENT: at the end of a transaction all data must be in consistent state
+
+ISOLATED: all modifications must be independent of each other
+
+DURABLE: all modifications must be permanent
+
+
+
+
+
+
+
+E.G.
+
+1) create tables for example
+
+* CREATE TABLE t_orders (order_number int, order_date date, required_date date, shipped_date date, status varchar(255), comments varchar(255), customer_number int);
+
+* CREATE TABLE t_order_details (order_number int, product_code varchar(255), quantity int, price decimal(10, 3), order_line_number int);
+
+
+
+2) define transaction 
+ 
+* START TRANSACTION;
+
+* SELECT @order_number := MAX(order_number) + 1 FROM t_orders;
+
+* INSERT INTO t_orders(order_number, order_date, required_date, shipped_date, status, customer_number) VALUES (@order_number, '2022-05-09', '2022-06-10', '2022-06-11', 'processing', 145);
+
+* INSERT INTO t_order_details (order_number, product_code, quantity, price, order_line_number) VALUES (@order_number, 'S18_1749', 30, 136, 1), (@order_number, 'S18_2248', 50, 55.09, 2);
+
+* COMMIT;
+
+
+3) check
+
+*  SELECT a.order_number, a.order_date, a.required_date, a.shipped_date, a.status, a.comments, b.order_line_number, b.product_code, b.quantity, b.price FROM t_orders a JOIN t_order_details b ON a.order_number = b.order_number WHERE a.order_number = 1;
+
+
+4) ROLLBACK (if is necessary)
+
+- only valid immediately after the commit sentence
+
+* ROLLBACK; 
+
+
+
+
+
+E.G.
+
+* CREATE TABLE purchase_transaction_customer (id int, balance decimal(10, 3));
+
+* CREATE TABLE purchase_transaction_vendor (id int, balance decimal(10, 3));
+
+* INSERT INTO purchase_transaction_customer (id, balance) VALUES (2, 1000);
+
+* INSERT INTO purchase_transaction_vendor (id, balance) VALUES (2, 500);
+
+
+- in order to check a condition o abort the transaction we have to wrap it into a IF statement
+
+DELIMITER //
+
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
+UPDATE accounts SET balance = balance - 1000 WHERE actid = 101;
+UPDATE accounts SET balance = balance + 1000 WHERE actid = 102;
+IF (SELECT balance FROM accounts WHERE actid = 101) >= 0 THEN
+COMMIT;
+ELSE
+ROLLBACK;
+END IF;
+
+//
+
+DELIMITER //
+    IF (SELECT balance FROM purchase_transaction_customer WHERE id = 2) >= 500 THEN
+    START TRANSACTION;
+    UPDATE purchase_transaction_customer SET balance = (balance - 500) WHERE id = 2;
+    UPDATE purchase_transaction_vendor SET balance = (balance  + 500) WHERE id = 2;
+    COMMIT;
+    ELSE SELECT 'TRANSACTION NOT DONE';
+END IF;//
+

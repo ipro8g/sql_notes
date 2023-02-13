@@ -1,0 +1,98 @@
+1) arithmetic operators: + - / * %
+
+    -any number data type
+
+2) comparison operators: = <> != > < >= <=
+
+    -for any compatible data types
+
+
+
+
+3) logical operators: AND, OR, NOT, IN, BETWEEN, ANY, ALL, SOME, EXISTS, LIKE
+
+    -ANY and SOME: TRUE if any of the subquery values meet the condition.
+
+    -EXISTS: The EXISTS checks the existence of at least on row in result of a Subquery.
+
+        -SELECT agent_code,agent_name,working_area,commission FROM agents WHERE exists (SELECT * FROM  customer     WHERE grade=3 AND agents.agent_code=customer.agent_code) ORDER BY commission;
+
+        -SELECT agent_code,agent_name,working_area,commission FROM agents WHERE exists NOT (SELECT * FROM  customer     WHERE grade=3 AND agents.agent_code=customer.agent_code) ORDER BY commission;
+
+
+        -difference between exists/in
+
+            -select distinct agent_code from orders where exists(select agent_code from customer where payment_amt > 3000);
+
+            -select distinct agent_code from orders where agent_code in(select agent_code from customer where payment_amt > 3000);
+
+        -exists in cascade with 3 tables
+
+            -select * from employees where exists(select department_id from departments where exists(select location_id from locations where country_id = 'uk' and departments.location_id = locations.location_id) and employees.department_id = departments.department_id);
+
+        -using in
+            
+            -select distinct agent_code from orders where agent_code in(select agent_code from customer where payment_amt > 3000 and (select count(*) from customer where payment_amt > 3000) > 10);
+
+
+        -insert using exists (having exaclty same structure)
+
+            -insert into test2 select * from test3 where exists(select * from test3 where id = 2);
+
+        -some
+
+            -select agent_code, agent_name, working_area, comission from agents where agent_code = some(select agent_code from customer where cust_country = 'uk');
+
+
+
+
+
+
+        -ALL (All the rows are inside the condition)
+
+            - From the following tables, write a SQL query to find the country where Football EURO cup 2016 held. Return country name
+
+            *  SELECT country_name FROM soccer_country WHERE country_id = ALL(SELECT country_id FROM soccer_city);
+
+
+
+
+
+        -any
+                
+            -select agent_code, agent_name, working_area, comission from agents where agent_code = any(select agent_code from customer where cust_country = 'uk');
+
+        -like with % (char and varchar only)
+    
+            -select agents.agent_code, agents.agent_name, agents.working_area, agents.comission, customer.cust_name from agents, customer where agents.agent_code = customer.agent_code and customer.cust_name like '%jack%';
+
+        -like with _ (char and varchar only)
+    
+            -select agents.agent_code, agents.agent_name, agents.working_area, agents.comission, customer.cust_name from agents, customer where agents.agent_code = customer.agent_code and customer.cust_name like 'j_ck%';
+
+
+            -select agents.agent_code, agents.agent_name, agents.working_area, agents.comission, customer.cust_name from agents, customer where agents.agent_code = customer.agent_code and customer.cust_name like '___k%';
+
+
+
+4) sql unary operator
+
+    -select * from test2 where +id; (will return all positive values for column `id`)
+
+5) sql bitwise: & AND, | OR, ^ XOR
+
+6) compound operators
+
+    -   += 	Add equals
+    -   -= 	Subtract equals
+    -   *= 	Multiply equals
+    -   /= 	Divide equals
+    -   %= 	Modulo equals
+    -   &= 	Bitwise AND equals
+    -   ^-= Bitwise exclusive equals
+    -   |*= Bitwise OR equals
+
+
+    
+     
+    

@@ -1,0 +1,38 @@
+DELIMITER //
+CREATE PROCEDURE cursor_test(IN in_dept_id INT)
+MODIFIES SQL DATA
+	BEGIN
+	DECLARE emp_id INT;
+	DECLARE emp_salary INT;
+	DECLARE dep_id INT;
+	DECLARE new_salary INT DEFAULT 0;
+	DECLARE done INT DEFAULT 0;
+	
+	DECLARE cursor1 CURSOR FOR (SELECT id, salary, departmentid FROM turing_employee WHERE departmentid = in_dept_id);
+	
+	DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1; -- eof flag
+	CREATE TEMPORARY TABLE IF NOT EXISTS emp_raises (employee_id INT, department_id INT, new_salary INT);
+	
+	OPEN cursor1;
+	emp_loop: LOOP
+	
+		FETCH cursor1 INTO emp_id, emp_salary, dep_id;
+		
+		IF done = 1 THEN -- no more rows
+			LEAVE emp_loop; 
+		END IF;
+		
+		CALL new_salary_cursor(emp_id, new_salary);
+		
+		IF (new_salary <> emp_salary) THEN
+		
+			UPDATE turing_employee SET salary = new_salary WHERE id = emp_id;
+			
+			INSERT INTO emp_raises (employee_id, department_id, new_salary) VALUES (emp_id, dep_id, new_salary);
+		END IF;
+		
+		END LOOP emp_loop;
+		CLOSE cursor1;
+		
+		SELECT * FROM emp_raises ORDER BY emp_id; -- see the results
+END//

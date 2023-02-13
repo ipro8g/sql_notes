@@ -1,0 +1,7 @@
+1) set variable with the string
+
+* SET @STR = "10,CLARK,MANAGER";
+
+2) do the substract operation, take out the commas from string
+
+* SELECT CONCAT(LENGTH(@STR)-LENGTH(REPLACE(@STR,",","")));

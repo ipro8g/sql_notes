@@ -1,0 +1,138 @@
+- create a temporary table taking two tables values, related by at least 1 field
+- mostly time joins are faster than subqueries
+- keyword ON instead where
+
+
+
+- EQUI JOIN =
+
+    - INNER join return only matched values
+
+//JOIN SPECIFIC COLUMNS
+
+* select table_x.x, table_x.o, table_y.p from table_x join table_y on table_x.x = table_y.p;
+
+* select foods.item_unit, foods.item_name, company.company_name, company.company_city from foods join company on foods.company_id = company.company_id;
+
+//INNER JOIN = JOIN
+
+//JOIN ALL COLUMNS
+
+* select * from foods inner join company on foods.company_id = company.company_id;
+
+* select * from table_a INNER JOIN table_b on table_a.a = table_b.a;
+
+* select * from table_a JOIN table_b on table_a.a = table_b.a;
+
+    table_a                 table_b                        result
+
+                                                     table_a       table_b
+|    a | m    |         |    a | n    |          |    a | m    |    a | n    |
++------+------+         +------+------+          +------+------+------+------+        
+|    1 | m    |         |    2 | p    |          |    2 | n    |    2 | p    |
+|    2 | n    |         |    3 | q    | 
+|    4 | o    |         |    5 | r    | 
+
+
+
+
+
+
+    - OUTER join (LEFT, RIGHT) returns all not matched values with null
+
+
+* select * from table_a LEFT JOIN table_b on table_a.a = table_b.a;
+
+    table_a                 table_b                        result
+
+                                                     table_a       table_b
+|    a | m    |         |    a | n    |          |    a | m    |    a | n    |
++------+------+         +------+------+          +------+------+------+------+        
+|    1 | m    |         |    2 | p    |          |    2 | n    |    2 | p    |
+|    2 | n    |         |    3 | q    |          |    1 | m    | NULL | NULL |
+|    4 | o    |         |    5 | r    |          |    4 | o    | NULL | NULL |
+
+
+* select * from table_b RIGHT JOIN table_a on table_b.a = table_a.a;
+
+    table_a                 table_b                        result
+
+                                                     table_b       table_a
+|    a | m    |         |    a | n    |          |    a |    n |    a | m    |
++------+------+         +------+------+          +------+------+------+------+        
+|    1 | m    |         |    2 | p    |          |    2 | p    |    2 | n    |
+|    2 | n    |         |    3 | q    |          | NULL | NULL |    1 | m    |
+|    4 | o    |         |    5 | r    |          | NULL | NULL |    4 | o    |
+
+
+
+
+
+
+
+- NON EQUI JOIN < > <= =>
+
+
+//SELECT INFO FROM DESPATCH WHERE DES_AMOUNT IS LESS THAN THE ORD_AMOUNT AVERAGE FROM ORDERS AND MORE THAN THE MINIMUM ORD_AMOUNT FROM ORDERS 
+
+* select distinct despatch.des_amount, despatch.agent_code from despatch join orders on despatch.des_amount between (select min(ord_amount) from orders) and (select avg(ord_amount) from orders);
+
+
+
+
+
+
+
+
+- NATURAL JOIN
+
+    - pretty the same as inner join except that the related column apears only once
+    - The associated tables have one or more pairs of identically named columns.
+    - The columns must be the same data type.
+
+        * select * from foods natural join company;
+
+
+
+
+
+
+
+- CROSS JOIN - matrix cross product, also the product order matters
+
+    //for each table_x value retrieve all possible table_y combinations
+
+    * select table_x.x, table_y.y from table_x, table_y;
+
+    * select * from table_x cross join table_y;
+
+
+
+
+    * select table_y.y, table_x.x from table_y, table_x;
+
+    * select * from table_y cross join table_x;
+
+
+
+
+    * select foods.item_name, foods.item_unit, company.company_name, company.company_city from foods, company;
+
+
+    //IS NOT NECESSARY TO SPECIFY THE JOINED TABLE
+
+    * select foods.item_name, foods.item_unit, company.company_name, company.company_id from foods cross join company;
+
+
+
+
+
+
+
+
+
+- SELF JOIN
+
+- get all employees name whose owns employees in a supervisor role, and their employees from employee table
+
+    * select emp1.emp_name 'supervisor', emp2.emp_name 'employee'  from employee emp1, employee emp2 where emp1.emp_id = emp2.emp_supv;

@@ -1,0 +1,5 @@
+- BETWEEN is inclusive with number but exclusive with letters
+
+* SELECT * FROM salesman WHERE name BETWEEN 'a' AND 'l'; = SELECT * FROM salesman WHERE name > 'a' AND name < 'l';
+
+* SELECT * FROM salesman WHERE comission BETWEEN .12 AND .15; = SELECT * FROM salesman WHERE name >= 'a' AND name <= 'l';

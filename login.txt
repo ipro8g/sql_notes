@@ -1,0 +1,4 @@
+mysql -u root 'pass'
+
+
+NO SEMICOLON
